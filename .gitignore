@@ -1,3 +1,4 @@
 /selenium/*
 /src/*.pyc
 /src/test/*.pyc
+/*.pyc
