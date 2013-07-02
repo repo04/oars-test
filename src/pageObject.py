@@ -3,7 +3,7 @@ from selenium import webdriver
 import time
 
 
-class Page(object):
+class Page(superTest):
 
   driver = None
   navigation_sections = None
