@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 from selenium import webdriver
 import time
+import sys
+sys.path.insert(0, './test')
+import superTest
+sys.path.insert(0, '../../oars-tests')
+import testRunner
 
 
 class Page(superTest):
