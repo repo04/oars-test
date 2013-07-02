@@ -2,22 +2,27 @@
 from selenium import webdriver
 import time
 import sys
-sys.path.insert(0, './test')
+#sys.path.insert(0, './test')
 import superTest
-sys.path.insert(0, '../../oars-tests')
-import testRunner
+#sys.path.insert(0, '../../oars-tests')
 
+class Page(object):
 
-class Page(superTest):
-
+  test = None
+  program = None
+  url = None
   driver = None
   navigation_sections = None
 
-  def __init__(self,driver):
-    self.driver = driver
+  def __init__(self,args):
+   
+    self.test = args['test']
+    self.program = args['program']
+    self.url = args['url']
+    self.driver = args['driver']
 
     # creates list of different sections, i.e. Professional Experience
-    self.navigation_sections = driver.find_elements_by_class_name('icon')
+    self.navigation_sections = self.driver.find_elements_by_class_name('icon')
     
   def login(self, program_url):
     self.driver.get(program_url)

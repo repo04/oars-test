@@ -1,15 +1,9 @@
 #!/usr/bin/env python
 import sys
-sys.path.insert(0, '../../src')
+sys.path.insert(0, './src')
 import pages
-from selenium import webdriver
 
-driver = webdriver.Firefox()
-
-
-landing_page = pages.LandingPage(driver)
-landing_page.login('https://au-mir-oars-sb01-qa.2u.com')
-landing_page.teardown()
-
-
-
+def test_login(args):
+  landing_page = pages.LandingPage(args)
+  landing_page.login(args['url'])
+  landing_page.teardown()
