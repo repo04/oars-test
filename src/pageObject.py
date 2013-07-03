@@ -2,6 +2,11 @@
 from selenium import webdriver
 import time
 import sys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait, Select
+from selenium.webdriver.support import expected_conditions as EC
+      
+
 
 class Page(object):
 
@@ -28,9 +33,6 @@ class Page(object):
       existing_application = self.driver.find_element_by_id('choose-sign-in')
       existing_application.click()
 
-      from selenium.webdriver.common.by import By
-      from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
-      from selenium.webdriver.support import expected_conditions as EC
       wait = WebDriverWait(self.driver, 5)
       element = wait.until(EC.element_to_be_clickable((By.ID,'id_do_sign_in')))
 
@@ -59,16 +61,39 @@ class Page(object):
 
 
   def from_dict(self):
-    #sys.path.insert(0, './src/')
+    #page needs to load completely
+    time.sleep(4)
+
     import entryFields 
 
-    for key in entryFields.get_dictionary():
-      print key
-      '''
-      if key=='text_box':
-        driver.send_keys(key[3])
-      elif key=='radio_button':
-        driver.click()
-      elif key=='combo_box':
-        pass'''
+    fields = entryFields.get_dictionary()
+    select = None
+
+    for key in fields.keys():
+
+      #prints out field type first
+
+      try:
+        print '***',fields[key][0],'***'
+        if fields[key][0]=='text_box':
+          print '***',fields[key][2],'***'
+          text_box = self.driver.find_element_by_id(fields[key][2])
+          text_box.clear()
+          text_box.send_keys(fields[key][3])
       
+        elif fields[key][0]=='radio_button':
+          print '***',fields[key][2],'***'
+          radio_button = self.driver.find_element_by_id(fields[key][2]['yes'])
+          radio_button.click()
+
+          if fields[key][3]!='':
+            wait = WebDriverWait(self.driver, 5)
+            element = wait.until(EC.element_to_be_clickable((By.ID, fields[key][3])))
+
+        elif fields[key][0]=='combo_box':
+          combo_box = self.driver.find_element_by_id(fields[key][2])
+          select = Select(combo_box)
+          select.select_by_visible_text(fields[key][3])
+      except Exception, e:
+        raise e
+    time.sleep(8)
