@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 import sys
-sys.path.insert(0, './src/test/')
-import testPersonalInfo
 import argparse
 from selenium import webdriver
 
@@ -17,7 +15,10 @@ arg_map['program'] = args.program
 arg_map['url'] = args.url
 arg_map['driver'] = webdriver.Firefox()
 
-test = testPersonalInfo.test_personal_info(arg_map)
+sys.path.insert(0, './src/test/')
+t = __import__(arg_map['test'])
+
+test = t.test(arg_map)
 
 def __init__(self, test, program, url):
   self.test    = test
