@@ -73,17 +73,17 @@ class Page(object):
 
       #prints out field type first
 
-      try:
+      #try:
         print '***',fields[key][0],'***'
         if fields[key][0]=='text_box':
           print '***',fields[key][2],'***'
           text_box = self.driver.find_element_by_id(fields[key][2])
           text_box.clear()
           text_box.send_keys(fields[key][3])
-      
+
         elif fields[key][0]=='radio_button':
           print '***',fields[key][2],'***'
-          radio_button = self.driver.find_element_by_id(fields[key][2]['yes'])
+          radio_button = self.driver.find_element_by_id(fields[key][2])
           radio_button.click()
 
           if fields[key][3]!='':
@@ -94,6 +94,6 @@ class Page(object):
           combo_box = self.driver.find_element_by_id(fields[key][2])
           select = Select(combo_box)
           select.select_by_visible_text(fields[key][3])
-      except Exception, e:
-        raise e
+      #except Exception, e:
+       # raise e
     time.sleep(8)
