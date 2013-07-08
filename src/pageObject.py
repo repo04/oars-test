@@ -76,13 +76,13 @@ class Page(object):
       #try:
         print '***',fields[key][0],'***'
         if fields[key][0]=='text_box':
-          print '***',fields[key][2],'***'
+          print '***', key,'***'
           text_box = self.driver.find_element_by_id(fields[key][2])
           text_box.clear()
           text_box.send_keys(fields[key][3])
 
         elif fields[key][0]=='radio_button':
-          print '***',fields[key][2],'***'
+          print '***', key,'***'
           radio_button = self.driver.find_element_by_id(fields[key][2])
           radio_button.click()
 
@@ -91,9 +91,20 @@ class Page(object):
             element = wait.until(EC.element_to_be_clickable((By.ID, fields[key][3])))
 
         elif fields[key][0]=='combo_box':
+          print '***', key,'***'
           combo_box = self.driver.find_element_by_id(fields[key][2])
           select = Select(combo_box)
           select.select_by_visible_text(fields[key][3])
+
+        elif fields[key][0]=='add_button':
+          print '***', key, '***'
+          add_button = self.driver.find_element_by_link_text(fields[key][2])
+          add_button.click()
+
+        elif fields[key][0]=='save_button':
+          print '***', key, '***'
+          self.driver.execute_script("document.getElementsByClassName('button medium action save')["+fields[key][2]+"].click()")
+          
       #except Exception, e:
        # raise e
     time.sleep(8)
