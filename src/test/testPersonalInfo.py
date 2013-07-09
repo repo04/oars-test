@@ -10,8 +10,12 @@ def test(args):
   #personal_info = pages.PersonalInformation(args)
   #personal_info.complete()
 
-  pro_exp = pages.ProfessionalExperience(args)
-  pro_exp.navigate_to()
-  pro_exp.complete()
-  pro_exp.save_and_signout()
-  pro_exp.teardown()
+  #pro_exp = pages.ProfessionalExperience(args)
+  #pro_exp.navigate_to()
+  #pro_exp.complete()
+  #pro_exp.save_and_signout()
+  #pro_exp.teardown()
+
+  acad_background = pages.AcademicBackground(args)
+  acad_background.navigate_to()
+  acad_background.complete()

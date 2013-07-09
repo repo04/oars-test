@@ -4,7 +4,7 @@ import time, sys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-import personalInformation, professionalExperience     
+import personalInformation, professionalExperience, academicBackground     
 
 
 class Page(object):
@@ -18,7 +18,7 @@ class Page(object):
   index = None
   wait = None
 
-  sections = personalInformation, professionalExperience, '', '', ''
+  sections = personalInformation, professionalExperience, academicBackground, '', ''
 
   def __init__(self, args, index = None):
     self.test = args['test']
@@ -68,7 +68,8 @@ class Page(object):
   def navigate_to(self):
     try:
       self.navigation_sections[self.index].click()
-      time.sleep(4)
+
+      time.sleep(2) #temporary
     except Exception, e:
       raise e 
 
@@ -111,6 +112,10 @@ class Page(object):
         elif form[field][0]=='save_button':
           print '***', field, '***'
           self.driver.execute_script("document.getElementsByClassName('button medium action save')["+form[field][2]+"].click()")
+        
+        elif form[field][0]=='attach_a_file':
+          print '***', field, '***'
+          attach_button = self.driver.find_element_by_name(form[field][2])
           
       #except Exception, e:
        # raise e
