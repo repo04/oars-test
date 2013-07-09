@@ -8,5 +8,5 @@ def test(args):
   landing_page.login()
   
   personal_info = pages.PersonalInformation(args)
-  personal_info.from_dict()
+  personal_info.complete()
   personal_info.teardown()

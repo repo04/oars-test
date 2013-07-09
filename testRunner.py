@@ -19,9 +19,3 @@ sys.path.insert(0, './src/test/')
 t = __import__(arg_map['test'])
 
 test = t.test(arg_map)
-
-def __init__(self, test, program, url):
-  self.test    = test
-  self.program = program
-  self.url     = url
-

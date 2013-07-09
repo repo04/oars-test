@@ -2,26 +2,26 @@
 from pageObject import Page as page
 
 class LandingPage(page):
-  def __init__(self, driver):
+  def __init__(self, args):
     # initialize parent class
-    super(LandingPage, self).__init__(driver)
+    super(LandingPage, self).__init__(args)
 
 class PersonalInformation(page):
-  def __init__(self, driver):
-    super(PersonalInformation, self).__init__(driver)
+  def __init__(self, args):
+    super(PersonalInformation, self).__init__(args)
     
 class ProfessionalExperience(page):
-  def __init__(self, driver):
-    super(ProfessionalExperience, self).__init__(driver)
-    
+  def __init__(self, args):
+    super(ProfessionalExperience, self).__init__(args)
+
 class AcademicBackground(page):
-  def __init__(self, driver):
-    super(AcademicBackground, self).__init__(driver)
+  def __init__(self, args):
+    super(AcademicBackground, self).__init__(args)
     
 class ApplicationUploads(page):
-  def __init__(self, driver):
-    super(ApplicationUploads, self).__init__(driver)
+  def __init__(self, args):
+    super(ApplicationUploads, self).__init__(args)
 
 class Recommendations(page):
-  def __init__(self, driver):
-    super(Recommendations, self).__init__(driver)
+  def __init__(self, args):
+    super(Recommendations, self).__init__(args)
