@@ -1,6 +1,6 @@
 import collections
 
-def complete():
+def info():
 
   form = collections.OrderedDict() 
 
@@ -31,7 +31,7 @@ def complete():
   form['preferred enrollment date'] = ['combo_box', 'ID', 'id_program_start_date', 'May 2014']
   form['preferred enrollment status'] = ['combo_box', 'ID', 'id_full_or_part_time', 'Full-time']
   form['previously applied year'] = ['radio_button', 'ID', 'id_has_previously_applied.yes', 'id_previously_applied_year']
-  form['learned about program'] = ['combo_box', 'ID', 'id_learned_about_program', 'Other'] #ID = id_learned_about_program_other 
+  form['learned about program'] = ['combo_box', 'ID', 'id_learned_about_program', 'Search Engine/Online Ad']
   form['other graduate programs'] = ['combo_box', 'ID', 'id_is_applying_other_graduate_programs', 'Yes']
   
   form['add a program'] = ['add_button', 'link text', 'Add a program']
@@ -49,7 +49,7 @@ def complete():
   form['proficiency'] = ['combo_box', 'ID', 'id_other_languages.proficiency', 'Advanced']
   form['save language'] = ['save_button', 'index', '1']
   
-  form['international experience'] = ['combo_box', 'ID', 'id_international_experience', 'Other'] #id_international_experience_other
+  form['international experience'] = ['combo_box', 'ID', 'id_international_experience', 'Study Abroad'] #id_international_experience_other
 
   #Other Information
   form['peace corps'] = ['radio_button', 'ID', 'id_is_peace_corps_or_tfa.yes', 'id_peace_corps_or_tfa']
@@ -67,9 +67,9 @@ def complete():
   form['state'] = ['text_box', 'ID', 'id_address.primary.state', 'Maharashtra'] #changes to combo box if primary country is US
   form['zip code'] = ['text_box', 'ID', 'id_address.primary.postal_code', '10011']
 
-  form['secondary address'] = ['radio_button', 'ID', 'id_secondary_address.yes', ''] # multiple text fields appear
+  form['secondary address'] = ['radio_button', 'ID', 'id_secondary_address.no', ''] # multiple text fields appear if yes
   
-  form['which address'] = ['combo_box', 'ID', 'id_will_reside_at_address', 'Secondary']
+  form['which address'] = ['combo_box', 'ID', 'id_will_reside_at_address', 'Home / Primary']
 
   form['home phone country'] = ['combo_box', 'ID', 'id_phone.home_country', 'United States (+1)']
   form['home phone number'] = ['text_box', 'ID', 'id_phone.home', '555-123-home']

@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 from selenium import webdriver
-import time
-import sys
+import time, sys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-      
+import personalInformation, professionalExperience     
 
 
 class Page(object):
@@ -14,18 +13,25 @@ class Page(object):
   program = None
   url = None
   driver = None
+  
   navigation_sections = None
+  index = None
+  wait = None
 
-  def __init__(self, args):
-   
+  sections = personalInformation, professionalExperience, '', '', ''
+
+  def __init__(self, args, index = None):
     self.test = args['test']
     self.program = args['program']
     self.url = args['url']
     self.driver = args['driver']
     
+    self.index = index
+    self.wait = WebDriverWait(self.driver, 5)
+
     # creates list of different sections, i.e. Professional Experience
     self.navigation_sections = self.driver.find_elements_by_class_name('icon')
-    
+
   def login(self):
     try:
       self.driver.get(self.url)
@@ -33,8 +39,7 @@ class Page(object):
       existing_application = self.driver.find_element_by_id('choose-sign-in')
       existing_application.click()
 
-      wait = WebDriverWait(self.driver, 5)
-      element = wait.until(EC.element_to_be_clickable((By.ID,'id_do_sign_in')))
+      element = self.wait.until(EC.element_to_be_clickable((By.ID,'id_do_sign_in')))
 
       email_address = self.driver.find_element_by_name('login')
       password_field = self.driver.find_element_by_name('password')
@@ -44,33 +49,35 @@ class Page(object):
       password_field.send_keys('qwerty')
       sign_in_button.click()
 
-      element2 = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, 'icon')))
+      element = self.wait.until(EC.element_to_be_clickable((By.CLASS_NAME,'icon')))
     except Exception, e:
       print "***Login failed***"
       raise e
     
-  def change_password():
-    pass
+  def change_password(self):
+    change_password_button = self.driver.find_element_by_class_name('action leave reset-password')
+    change_password_button.click()
   
-  def save_and_signout():
-    pass
+  def save_and_signout(self):
+    sign_out_button = self.driver.find_element_by_id('id_do_sign_out')
+    sign_out_button.click()
+    alert = self.driver.switch_to_alert()
+    alert.accept()
+    element = self.wait.until(EC.element_to_be_clickable((By.ID, 'id_email')))
 
   def navigate_to(self):
-     pass
+    try:
+      self.navigation_sections[self.index].click()
+      time.sleep(4)
+    except Exception, e:
+      raise e 
 
   def teardown(self):
     self.driver.close()
 
 
   def complete(self):
-
-    #page needs to load completely; replace with webdriverwait
-    time.sleep(4)
-
-    import personalInformation 
-
-    form = personalInformation.complete()
-    select = None
+    form = self.sections[self.index].info()
 
     for field in form:
       #try:
@@ -88,8 +95,7 @@ class Page(object):
           radio_button.click()
 
           if form[field][3]!='':
-            wait = WebDriverWait(self.driver, 5)
-            element = wait.until(EC.element_to_be_clickable((By.ID, form[field][3])))
+            element = self.wait.until(EC.element_to_be_clickable((By.ID, form[field][3])))
 
         elif form[field][0]=='combo_box':
           print '***', field,'***'
@@ -108,4 +114,3 @@ class Page(object):
           
       #except Exception, e:
        # raise e
-    time.sleep(8)

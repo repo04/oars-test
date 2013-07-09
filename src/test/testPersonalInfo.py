@@ -7,6 +7,11 @@ def test(args):
   landing_page = pages.LandingPage(args)
   landing_page.login()
   
-  personal_info = pages.PersonalInformation(args)
-  personal_info.complete()
-  personal_info.teardown()
+  #personal_info = pages.PersonalInformation(args)
+  #personal_info.complete()
+
+  pro_exp = pages.ProfessionalExperience(args)
+  pro_exp.navigate_to()
+  pro_exp.complete()
+  pro_exp.save_and_signout()
+  pro_exp.teardown()
