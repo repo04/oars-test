@@ -116,6 +116,6 @@ class Page(object):
         elif form[field][0]=='attach_a_file':
           print '***', field, '***'
           attach_button = self.driver.find_element_by_name(form[field][2])
-          
+          attach_button.send_keys(form[field][3])
       #except Exception, e:
        # raise e
