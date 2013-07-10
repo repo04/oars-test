@@ -4,8 +4,8 @@ import time, sys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-import personalInformation, professionalExperience, academicBackground     
-
+import personalInformation, professionalExperience, academicBackground
+from faker import Faker     
 
 class Page(object):
 
@@ -119,3 +119,18 @@ class Page(object):
           attach_button.send_keys(form[field][3])
       #except Exception, e:
        # raise e
+
+  def auto_fill(self):
+    info = Faker()
+    time.sleep(3)
+    sections = self.driver.find_elements_by_xpath("//select[@id!='']|//input[@id!='']")
+  
+    for field in sections:
+      print field.get_attribute('id')
+      if field.get_attribute('type')=='text':
+        field.clear()
+        field.send_keys(info.name())
+      elif field.get_attribute('type')=='radio' and 'yes' in field.get_attribute('id'):
+        #needs work
+        print field.get_attribute('id'), 'success'
+        field.click()
