@@ -121,16 +121,43 @@ class Page(object):
        # raise e
 
   def auto_fill(self):
-    info = Faker()
+    #info = Faker()
     time.sleep(3)
-    sections = self.driver.find_elements_by_xpath("//select[@id!='']|//input[@id!='']")
-  
-    for field in sections:
-      print field.get_attribute('id')
-      if field.get_attribute('type')=='text':
-        field.clear()
-        field.send_keys(info.name())
-      elif field.get_attribute('type')=='radio' and 'yes' in field.get_attribute('id'):
-        #needs work
-        print field.get_attribute('id'), 'success'
-        field.click()
+    #sections = self.driver.find_elements_by_xpath("//select[@id!='']|//input[@id!='']")
+    #conditionals = self.driver.find_elements_by_xpath("//ol[contains(@class, 'conditional')]|//ol[contains(@class, 'if')]")
+    
+    forms = self.driver.find_elements_by_tag_name('form')
+    forms_fieldsets = []
+    num = 0
+    while 'professional' not in forms[num].get_attribute('id'):
+      forms_fieldsets +=forms[num].find_elements_by_xpath("fieldset")
+      num += 1
+    
+    print '***start***'
+
+    for fieldset in forms_fieldsets:
+      inputs = fieldset.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']")
+      index = 0
+      while index < len(inputs):
+        field = inputs[index]
+        if field.get_attribute('type')=='text' and 'other' not in field.get_attribute('id'):  #temp
+          print field.tag_name, field.get_attribute('id'), "sending keys"
+          field.clear()
+          field.send_keys("stuff")
+        elif field.get_attribute('type')=='radio':
+          print "radio button"
+          if len(fieldset.find_elements_by_xpath("*"))==2 and 'if' in fieldset.find_element_by_xpath("ol").get_attribute('class'):
+            if 'yes' in field.get_attribute('id'):
+              print field.get_attribute('id'), 'yes'
+              field.click()
+          elif len(fieldset.find_elements_by_xpath("*"))==2 and 'not' in fieldset.find_element_by_xpath("ol").get_attribute('class'):
+            if 'no' in field.get_attribute('id'):
+              print field.get_attribute('id'), 'no'
+              field.click()
+        elif field.tag_name=='select':
+          print field.get_attribute('id'), 'selecting'
+          select = Select(field)
+          select.select_by_index(2)
+        index += 1  
+
+    print '***end***'
