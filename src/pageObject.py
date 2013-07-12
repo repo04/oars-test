@@ -181,9 +181,9 @@ class Page(object):
         self._select_combo(field, 1)
         
         #handles add sections
-      elif field.tag_name=='section' and 'inline' in field.get_attribute('id'):
-        print field.get_attribute('id')
-        self._inline_section(field)
+      #elif field.tag_name=='section' and 'inline' in field.get_attribute('id'):
+       # print field.get_attribute('id')
+        #self._inline_section(field)
       index += 1 
 
   def auto_fill(self):
@@ -193,26 +193,31 @@ class Page(object):
     #conditionals = self.driver.find_elements_by_xpath("//ol[contains(@class, 'conditional')]|//ol[contains(@class, 'if')]")
     
     #grabs anything with a form tag
-    forms = self.driver.find_elements_by_xpath("//form")
     forms_fieldsets = []
-    num = 0
-
     #makes a list of all fieldset section tags before professional experience section; temp: fix to grad inline sections as well
+    '''
+    forms = self.driver.find_elements_by_xpath("//form")
+    num = 0
     while 'professional' not in forms[num].get_attribute('id'):
       forms_fieldsets += forms[num].find_elements_by_xpath("fieldset")
       num += 1
+    '''
+    forms_fieldsets_inlines = self.driver.find_elements_by_xpath("//fieldset|//section[contains(@id, 'inline')]")
 
     print '***start***'
     
     #rough draft
-    #iterates thru forms_fieldsets list and for each fieldset tag find the input and/or select elements and interact with them appropriately
-    for fieldset in forms_fieldsets:
+    #iterates thru forms_fieldsets_inlines list and for each fieldset tag find the input and/or select elements and interact with them appropriately
+    for tag in forms_fieldsets_inlines:
       #grabs anything with a select or input tag starting from fieldset node
-      inputs = fieldset.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']")
-      self._sort_and_fill(inputs, fieldset)
+      if tag.tag_name=='fieldset':
+        inputs = tag.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']")
+        self._sort_and_fill(inputs, tag)
+      elif tag.tag_name=='section':
+        self._inline_section(tag)
     
-
+    print '***end***'
+'''
     inlines = self.driver.find_elements_by_xpath("//section[contains(@id, 'inline')]")
     self._sort_and_fill(inlines)
-
-    print '***end***'
+'''
