@@ -120,6 +120,72 @@ class Page(object):
       #except Exception, e:
        # raise e
 
+#alternate way of filling section below
+
+  def _fill_text(self, element):
+    print element.tag_name, element.get_attribute('id'), "sending keys"
+    element.clear()
+    element.send_keys("stuff")
+
+  def _select_combo(self, element, option):
+    print element.get_attribute('id'), 'selecting'
+    select = Select(element)
+    select.select_by_index(option)
+
+  def _click_radio(self, element, fieldset):
+    print "radio button"
+    if len(fieldset.find_elements_by_xpath("*"))==2 and 'if' in fieldset.find_element_by_xpath("ol").get_attribute('class'):
+      if 'yes' in element.get_attribute('id'):
+        print element.get_attribute('id'), 'yes'
+        element.click()
+    elif len(fieldset.find_elements_by_xpath("*"))==2 and 'not' in fieldset.find_element_by_xpath("ol").get_attribute('class'):
+      if 'no' in element.get_attribute('id'):
+        print element.get_attribute('id'), 'no'
+        element.click()
+
+  def _inline_section(self, element):
+    print 'adding'
+    buttons = element.find_elements_by_xpath(".//a[contains(@class, 'button')]")
+    print len(buttons)
+    add_button = buttons[2]
+    save_button = buttons[3]
+
+    add_button.click()
+    
+    sub_tr = element.find_element_by_xpath(".//tr[@class='editing']")
+    inputs = sub_tr.find_elements_by_xpath(".//input[@id!='']|.//select[@id!='']")
+    for input in inputs:
+      print input.get_attribute('id')
+
+    self._sort_and_fill(inputs)
+
+    save_button.click()
+
+    print 'saving'
+
+  def _sort_and_fill(self, inputs, fieldset=None):
+    index = 0
+    while index < len(inputs):
+      field = inputs[index]
+      #send keys to text field
+      if field.get_attribute('type')=='text' and field.is_displayed()==True:  #temp: and 'other' not in field.get_attribute('id')
+        if 'location' not in field.get_attribute('id'): 
+          self._fill_text(field)
+          pass
+      #select yes or no depending on whether button triggers a node to expand
+      elif field.get_attribute('type')=='radio':
+        self._click_radio(field, fieldset)
+        pass
+        #select combo boxes
+      elif field.tag_name=='select':
+        self._select_combo(field, 1)
+        
+        #handles add sections
+      elif field.tag_name=='section' and 'inline' in field.get_attribute('id'):
+        print field.get_attribute('id')
+        self._inline_section(field)
+      index += 1 
+
   def auto_fill(self):
     #info = Faker()
     time.sleep(3)
@@ -127,50 +193,26 @@ class Page(object):
     #conditionals = self.driver.find_elements_by_xpath("//ol[contains(@class, 'conditional')]|//ol[contains(@class, 'if')]")
     
     #grabs anything with a form tag
-    forms = self.driver.find_elements_by_tag_name('form')
+    forms = self.driver.find_elements_by_xpath("//form")
     forms_fieldsets = []
     num = 0
 
-    #makes a list of all fieldset tags before professional experience section
+    #makes a list of all fieldset section tags before professional experience section; temp: fix to grad inline sections as well
     while 'professional' not in forms[num].get_attribute('id'):
-      forms_fieldsets +=forms[num].find_elements_by_xpath("fieldset")
+      forms_fieldsets += forms[num].find_elements_by_xpath("fieldset")
       num += 1
-    
+
     print '***start***'
     
     #rough draft
     #iterates thru forms_fieldsets list and for each fieldset tag find the input and/or select elements and interact with them appropriately
     for fieldset in forms_fieldsets:
-      
-      #grabs anything with a select or input tag
+      #grabs anything with a select or input tag starting from fieldset node
       inputs = fieldset.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']")
-      index = 0
-      while index < len(inputs):
-        field = inputs[index]
-        
-        #send keys to text field
-        if field.get_attribute('type')=='text' and 'other' not in field.get_attribute('id'):  #temp
-          print field.tag_name, field.get_attribute('id'), "sending keys"
-          field.clear()
-          field.send_keys("stuff")
-        
-        #select yes or no depending on whether button triggers a node to expand
-        elif field.get_attribute('type')=='radio':
-          print "radio button"
-          if len(fieldset.find_elements_by_xpath("*"))==2 and 'if' in fieldset.find_element_by_xpath("ol").get_attribute('class'):
-            if 'yes' in field.get_attribute('id'):
-              print field.get_attribute('id'), 'yes'
-              field.click()
-          elif len(fieldset.find_elements_by_xpath("*"))==2 and 'not' in fieldset.find_element_by_xpath("ol").get_attribute('class'):
-            if 'no' in field.get_attribute('id'):
-              print field.get_attribute('id'), 'no'
-              field.click()
-        
-        #select combo boxes
-        elif field.tag_name=='select':
-          print field.get_attribute('id'), 'selecting'
-          select = Select(field)
-          select.select_by_index(2)
-        index += 1  
+      self._sort_and_fill(inputs, fieldset)
+    
+
+    inlines = self.driver.find_elements_by_xpath("//section[contains(@id, 'inline')]")
+    self._sort_and_fill(inlines)
 
     print '***end***'
