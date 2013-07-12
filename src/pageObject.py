@@ -4,8 +4,8 @@ import time, sys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-import personalInformation, professionalExperience, academicBackground
-from faker import Faker     
+import personalInformation, professionalExperience, academicBackground     
+import fakeInfo
 
 class Page(object):
 
@@ -17,6 +17,7 @@ class Page(object):
   navigation_sections = None
   index = None
   wait = None
+  fake_info = None
 
   sections = personalInformation, professionalExperience, academicBackground, '', ''
 
@@ -31,6 +32,8 @@ class Page(object):
 
     # creates list of different sections, i.e. Professional Experience
     self.navigation_sections = self.driver.find_elements_by_class_name('icon')
+
+    self.fake_info = fakeInfo.FakeData()
 
   def login(self):
     try:
@@ -125,7 +128,8 @@ class Page(object):
   def _fill_text(self, element):
     print element.tag_name, element.get_attribute('id'), "sending keys"
     element.clear()
-    element.send_keys("stuff")
+    info = self.fake_info.fill_valid_value(element)
+    element.send_keys(info)
 
   def _select_combo(self, element, option):
     print element.get_attribute('id'), 'selecting'
@@ -209,7 +213,6 @@ class Page(object):
     #rough draft
     #iterates thru forms_fieldsets_inlines list and for each fieldset tag find the input and/or select elements and interact with them appropriately
     for tag in forms_fieldsets_inlines:
-      #grabs anything with a select or input tag starting from fieldset node
       if tag.tag_name=='fieldset':
         inputs = tag.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']")
         self._sort_and_fill(inputs, tag)
