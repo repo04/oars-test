@@ -34,19 +34,28 @@ class FakeData(object):
     num2 = random.choice(range(1000,10000))
     return str(num1)+'-'+'555'+'-'+str(num2)
 
+  def _fake_year(self, element):
+    year = random.choice(range(1900,2014))
+    return year
+
   def fill_valid_value(self, element):
     element_id = element.get_attribute('id')
     
     if 'name' in element_id:
       return self._fake_name(element.get_attribute('id'))
     elif '.address' in element_id:
-      return self.faker.street_address()
+      if '1' in element_id:
+        return self.faker.street_address()
+      else: 
+        return 'Suite 7B'
     elif 'city' in element_id:
       return self.faker.city()
     elif 'postal' in element_id:
       return self.faker.zip_code()
     elif 'date' in element_id:
       return self._fake_date(element.get_attribute('class'))
+    elif 'year' in element_id:
+      return self._fake_year(element)
     elif 'company' in element_id or 'employer' in element_id:
       return self.faker.company()
     elif 'email' in element_id:
@@ -55,5 +64,9 @@ class FakeData(object):
       return self._fake_phone(element.get_attribute('id'))
     elif 'security' in element_id:
       return '123-45-6789'
+    elif 'university' in element_id:
+      return self.faker.city()+' University'
+    elif 'language' in element_id:
+      return 'Latin'
     else:
       return 'filler-value'

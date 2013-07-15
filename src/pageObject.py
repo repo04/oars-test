@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import personalInformation, professionalExperience, academicBackground     
 import fakeInfo
 
+
 class Page(object):
 
   test = None
@@ -71,8 +72,6 @@ class Page(object):
   def navigate_to(self):
     try:
       self.navigation_sections[self.index].click()
-
-      time.sleep(2) #temporary
     except Exception, e:
       raise e 
 
@@ -80,7 +79,7 @@ class Page(object):
     self.driver.close()
 
 
-  def complete(self):
+  '''def complete(self):
     form = self.sections[self.index].info()
 
     for field in form:
@@ -121,7 +120,7 @@ class Page(object):
           attach_button = self.driver.find_element_by_name(form[field][2])
           attach_button.send_keys(form[field][3])
       #except Exception, e:
-       # raise e
+       # raise e'''
 
 #alternate way of filling section below
 
@@ -130,7 +129,7 @@ class Page(object):
     element.clear()
     info = self.fake_info.fill_valid_value(element)
     element.send_keys(info)
-
+    
   def _select_combo(self, element, option):
     print element.get_attribute('id'), 'selecting'
     select = Select(element)
@@ -138,31 +137,39 @@ class Page(object):
 
   def _click_radio(self, element, fieldset):
     print "radio button"
-    if len(fieldset.find_elements_by_xpath("*"))==2 and 'if' in fieldset.find_element_by_xpath("ol").get_attribute('class'):
-      if 'yes' in element.get_attribute('id'):
-        print element.get_attribute('id'), 'yes'
-        element.click()
-    elif len(fieldset.find_elements_by_xpath("*"))==2 and 'not' in fieldset.find_element_by_xpath("ol").get_attribute('class'):
-      if 'no' in element.get_attribute('id'):
-        print element.get_attribute('id'), 'no'
-        element.click()
+    
+    if fieldset==None:
+      fieldset = element.find_element_by_xpath("../..")
+      print fieldset.tag_name
+    #iterates through child nodes of fieldset tag until it finds the ol child
+    for sub_node in fieldset.find_elements_by_xpath("*"):
+      if sub_node.tag_name=='ol':
+        if 'if' in sub_node.get_attribute('class') or 'location' in sub_node.get_attribute('class'):
+          #since 'if' is in the class attribute field we want to find and click the 'yes' radio button
+          if 'yes' in element.get_attribute('id'):
+            print element.get_attribute('id'), 'yes'
+            element.click()
+        elif'not' in sub_node.get_attribute('class'):
+          #since 'not' is in the class attribute field we want to find and click the 'no' radio button
+          if 'no' in element.get_attribute('id'):
+            print element.get_attribute('id'), 'no'
+            element.click()
 
   def _inline_section(self, element):
     print 'adding'
-    buttons = element.find_elements_by_xpath(".//a[contains(@class, 'button')]")
-    print len(buttons)
-    add_button = buttons[2]
-    save_button = buttons[3]
-
+    add_button = element.find_element_by_xpath(".//a[contains(@class, 'button action medium add')]")
+    save_button = element.find_element_by_xpath(".//a[contains(@class, 'button medium action save')]")
+  
+    #clicks add button for an inline section
     add_button.click()
-    
+   
+    #finds inputs elements for the newly expanded inline section    
     sub_tr = element.find_element_by_xpath(".//tr[@class='editing']")
     inputs = sub_tr.find_elements_by_xpath(".//input[@id!='']|.//select[@id!='']")
-    for input in inputs:
-      print input.get_attribute('id')
 
     self._sort_and_fill(inputs)
-
+    
+    #saves info after filling in section
     save_button.click()
 
     print 'saving'
@@ -171,16 +178,17 @@ class Page(object):
     index = 0
     while index < len(inputs):
       field = inputs[index]
-      #send keys to text field
-      if field.get_attribute('type')=='text' and field.is_displayed()==True:  #temp: and 'other' not in field.get_attribute('id')
+      
+      #checks to see if a text field is visible then sends keys
+      if field.get_attribute('type')=='text' and field.is_displayed()==True:
         if 'location' not in field.get_attribute('id'): 
           self._fill_text(field)
-          pass
+
       #select yes or no depending on whether button triggers a node to expand
       elif field.get_attribute('type')=='radio':
         self._click_radio(field, fieldset)
-        pass
-        #select combo boxes
+        
+      #select combo boxes
       elif field.tag_name=='select':
         self._select_combo(field, 1)
         
@@ -191,36 +199,19 @@ class Page(object):
       index += 1 
 
   def auto_fill(self):
-    #info = Faker()
     time.sleep(3)
-    #sections = self.driver.find_elements_by_xpath("//select[@id!='']|//input[@id!='']")
-    #conditionals = self.driver.find_elements_by_xpath("//ol[contains(@class, 'conditional')]|//ol[contains(@class, 'if')]")
-    
-    #grabs anything with a form tag
-    forms_fieldsets = []
-    #makes a list of all fieldset section tags before professional experience section; temp: fix to grad inline sections as well
-    '''
-    forms = self.driver.find_elements_by_xpath("//form")
-    num = 0
-    while 'professional' not in forms[num].get_attribute('id'):
-      forms_fieldsets += forms[num].find_elements_by_xpath("fieldset")
-      num += 1
-    '''
+    #grabs anything with a either a fieldset tag or section tag contiaining the word 'inline' in its id field
     forms_fieldsets_inlines = self.driver.find_elements_by_xpath("//fieldset|//section[contains(@id, 'inline')]")
 
     print '***start***'
-    
-    #rough draft
-    #iterates thru forms_fieldsets_inlines list and for each fieldset tag find the input and/or select elements and interact with them appropriately
+
+    #iterates thru forms_fieldsets_inlines list and for each fieldset/section tag find the input and/or select elements and interact with them appropriately
     for tag in forms_fieldsets_inlines:
-      if tag.tag_name=='fieldset':
-        inputs = tag.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']")
-        self._sort_and_fill(inputs, tag)
-      elif tag.tag_name=='section':
-        self._inline_section(tag)
+      if tag.is_displayed()==True:
+        if tag.tag_name=='fieldset':
+          inputs = tag.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']")
+          self._sort_and_fill(inputs, tag)
+        elif tag.tag_name=='section':
+          self._inline_section(tag)
     
     print '***end***'
-'''
-    inlines = self.driver.find_elements_by_xpath("//section[contains(@id, 'inline')]")
-    self._sort_and_fill(inlines)
-'''
