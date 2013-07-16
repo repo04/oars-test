@@ -132,7 +132,7 @@ class Page(object):
     
     if 'autocomplete' in element.get_attribute('class'):
       k = Keys()
-      #temp value
+      #temp value: 'Mar' is temporarily being used because it is triggering the autocomplete dropdown for the three autocomplete textboxes
       element.send_keys('Mar')
       
       element.send_keys(k.ARROW_DOWN)
@@ -155,14 +155,18 @@ class Page(object):
   def _click_radio(self, element, fieldset):
     print "radio button"
 
-    #iterates through child nodes of fieldset tag until it finds the ol child
+    #finds all children of fieldset tag
     for sub_node in fieldset.find_elements_by_xpath("*"):
+      #iterates through child nodes until it finds the ol child
+      #the ol child would carry information about whether or not the radio button is linked to hidden data fields
       if sub_node.tag_name=='ol':
+        #for radio buttons where a 'yes' would expand a hidden node, the words 'if' or 'location' are used in the ol class attribute
         if 'if' in sub_node.get_attribute('class') or 'location' in sub_node.get_attribute('class'):
           #since 'if' is in the class attribute field we want to find and click the 'yes' radio button
           if 'yes' in element.get_attribute('id'):
             print element.get_attribute('id'), 'yes'
             element.click()
+        #for radio buttons where a 'no' would expand a hidden node, the word 'not' is used in the ol class attribute
         elif'not' in sub_node.get_attribute('class'):
           #since 'not' is in the class attribute field we want to find and click the 'no' radio button
           if 'no' in element.get_attribute('id'):
@@ -196,26 +200,28 @@ class Page(object):
       field = inputs[index]
       print '*********'
       
-      #handles state field in a special manner. state field switches from a text box to a combo box if the US is selected as country
+      #handles state field in a special manner because the state field switches from a text box
+      #to a combo box if the US is selected as the country
       if 'location' in field.get_attribute('id'):
         state_field = fieldset.find_element_by_xpath(".//select[contains(@id, 'state')]")
         self._select_combo(state_field, 1)
-      #checks to see if a text field is visible then sends keys
+      
+      #checks to see if a text field is visible then sends keys.
       elif field.get_attribute('type')=='text' and field.is_displayed()==True:
-        #if 'location' in field.get_attribute('id'): 
         self._fill_text(field)
 
-      #select yes or no depending on whether button triggers a node to expand
+      #selects yes or no depending on whether button triggers a node to expand
       elif field.get_attribute('type')=='radio':
         self._click_radio(field, fieldset)
         
-      #select combo boxes
+      #selects the first option in combo boxes
       elif field.tag_name=='select':
         self._select_combo(field, 1)
       
       index += 1 
 
   def auto_fill(self):
+    #temporary. wait for page to load.
     time.sleep(3)
 
     #grabs anything with either a fieldset tag or section tag contiaining the word 'inline' in its id field
@@ -223,13 +229,14 @@ class Page(object):
 
     print '***start***'
 
-    #iterates through forms_fieldsets_inlines list and for each fieldset/section tag, finds the input
+    #iterates through fieldsets_inlines list and for each fieldset/section tag, finds the input
     #and/or select elements, then interacts with them appropriately
     for tag in fieldsets_inlines:
       #only evaluates elements on current page
       if tag.is_displayed()==True:
         if tag.tag_name=='fieldset':
           inputs = tag.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']")
+          #calls _sort_and_fill() method using input/select element and the fieldset tag of its ancestral node 
           self._sort_and_fill(inputs, tag)
         elif tag.tag_name=='section':
           self._inline_section(tag)
