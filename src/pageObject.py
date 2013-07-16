@@ -126,9 +126,13 @@ class Page(object):
 
   def _fill_text(self, element):
     print element.tag_name, element.get_attribute('id'), "sending keys"
-    element.clear()
-    info = self.fake_info.fill_valid_value(element)
-    element.send_keys(info)
+    if 'autocomplete' in element.get_attribute('class'):
+      #autocomplete textboxes
+      pass
+    else:
+      element.clear()
+      info = self.fake_info.fill_valid_value(element)
+      element.send_keys(info)
     
   def _select_combo(self, element, option):
     print element.get_attribute('id'), 'selecting'
@@ -137,10 +141,7 @@ class Page(object):
 
   def _click_radio(self, element, fieldset):
     print "radio button"
-    
-    if fieldset==None:
-      fieldset = element.find_element_by_xpath("../..")
-      print fieldset.tag_name
+
     #iterates through child nodes of fieldset tag until it finds the ol child
     for sub_node in fieldset.find_elements_by_xpath("*"):
       if sub_node.tag_name=='ol':
@@ -163,11 +164,12 @@ class Page(object):
     #clicks add button for an inline section
     add_button.click()
    
-    #finds inputs elements for the newly expanded inline section    
+    #finds input, select and fieldset tags for the newly expanded inline section    
     sub_tr = element.find_element_by_xpath(".//tr[@class='editing']")
     inputs = sub_tr.find_elements_by_xpath(".//input[@id!='']|.//select[@id!='']")
-
-    self._sort_and_fill(inputs)
+    fieldset = sub_tr.find_element_by_xpath(".//fieldset")
+    
+    self._sort_and_fill(inputs, fieldset)
     
     #saves info after filling in section
     save_button.click()
@@ -176,13 +178,19 @@ class Page(object):
 
   def _sort_and_fill(self, inputs, fieldset=None):
     index = 0
+
     while index < len(inputs):
       field = inputs[index]
+      print '*********'
       
+      #handles state field in a special manner. state field switches from a text box to a combo box if the US is selected as country
+      if 'location' in field.get_attribute('id'):
+        state_field = fieldset.find_element_by_xpath(".//select[contains(@id, 'state')]")
+        self._select_combo(state_field, 1)
       #checks to see if a text field is visible then sends keys
-      if field.get_attribute('type')=='text' and field.is_displayed()==True:
-        if 'location' not in field.get_attribute('id'): 
-          self._fill_text(field)
+      elif field.get_attribute('type')=='text' and field.is_displayed()==True:
+        #if 'location' in field.get_attribute('id'): 
+        self._fill_text(field)
 
       #select yes or no depending on whether button triggers a node to expand
       elif field.get_attribute('type')=='radio':
@@ -191,22 +199,21 @@ class Page(object):
       #select combo boxes
       elif field.tag_name=='select':
         self._select_combo(field, 1)
-        
-        #handles add sections
-      #elif field.tag_name=='section' and 'inline' in field.get_attribute('id'):
-       # print field.get_attribute('id')
-        #self._inline_section(field)
+      
       index += 1 
 
   def auto_fill(self):
     time.sleep(3)
-    #grabs anything with a either a fieldset tag or section tag contiaining the word 'inline' in its id field
-    forms_fieldsets_inlines = self.driver.find_elements_by_xpath("//fieldset|//section[contains(@id, 'inline')]")
+
+    #grabs anything with either a fieldset tag or section tag contiaining the word 'inline' in its id field
+    fieldsets_inlines = self.driver.find_elements_by_xpath("//fieldset|//section[contains(@id, 'inline')]")
 
     print '***start***'
 
-    #iterates thru forms_fieldsets_inlines list and for each fieldset/section tag find the input and/or select elements and interact with them appropriately
-    for tag in forms_fieldsets_inlines:
+    #iterates through forms_fieldsets_inlines list and for each fieldset/section tag, finds the input
+    #and/or select elements, then interacts with them appropriately
+    for tag in fieldsets_inlines:
+      #only evaluates elements on current page
       if tag.is_displayed()==True:
         if tag.tag_name=='fieldset':
           inputs = tag.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']")

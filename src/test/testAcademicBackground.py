@@ -6,6 +6,7 @@ import pages
 def test(args):
   landing_page = pages.LandingPage(args)
   landing_page.login()
-  
-  personal_info = pages.PersonalInformation(args)
-  personal_info.auto_fill()
+
+  acad_background = pages.AcademicBackground(args)
+  acad_background.navigate_to()
+  acad_background.auto_fill()

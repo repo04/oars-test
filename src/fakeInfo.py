@@ -11,8 +11,8 @@ class FakeData(object):
 		
   def _fake_date(self, date_format):
     year = random.choice(range(1950, 2013))
-    month = random.choice(range(0, 13))
-    day = random.choice(range(0, 29))
+    month = random.choice(range(1, 12))
+    day = random.choice(range(1, 30))
 
     if 'mm-dd-yyyy' in date_format:
       return str(month)+'/'+str(day)+'/'+str(year)
