@@ -1,5 +1,5 @@
 from faker import Faker
-import random
+import random, decimal
 
 #uses data to generate fake info
 class FakeData(object):
@@ -34,10 +34,6 @@ class FakeData(object):
     num2 = random.choice(range(1000,10000))
     return str(num1)+'-'+'555'+'-'+str(num2)
 
-  def _fake_year(self, element):
-    year = random.choice(range(1900,2014))
-    return year
-
   def fill_valid_value(self, element):
     element_id = element.get_attribute('id')
     
@@ -55,7 +51,7 @@ class FakeData(object):
     elif 'date' in element_id:
       return self._fake_date(element.get_attribute('class'))
     elif 'year' in element_id:
-      return self._fake_year(element)
+      return random.choice(range(1900,2014))
     elif 'company' in element_id or 'employer' in element_id:
       return self.faker.company()
     elif 'email' in element_id:
@@ -68,5 +64,10 @@ class FakeData(object):
       return self.faker.city()+' University'
     elif 'language' in element_id:
       return 'Latin'
+    elif 'score' in element_id:
+      return random.choice(range(100,800))
+    elif 'gpa' in element_id:
+      return str(decimal.Decimal(random.randrange(41))/decimal.Decimal(10))
+
     else:
       return 'filler-value'

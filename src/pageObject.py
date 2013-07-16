@@ -2,10 +2,12 @@
 from selenium import webdriver
 import time, sys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 import personalInformation, professionalExperience, academicBackground     
 import fakeInfo
+
 
 
 class Page(object):
@@ -125,10 +127,21 @@ class Page(object):
 #alternate way of filling section below
 
   def _fill_text(self, element):
+    
     print element.tag_name, element.get_attribute('id'), "sending keys"
+    
     if 'autocomplete' in element.get_attribute('class'):
-      #autocomplete textboxes
-      pass
+      k = Keys()
+      #temp value
+      element.send_keys('Mar')
+      
+      element.send_keys(k.ARROW_DOWN)
+      
+      self.wait.until(EC.element_to_be_clickable((By.XPATH, "//li[contains(@class, 'autocomplete')]")))
+      
+      highlighted_element = self.driver.find_element_by_xpath("//li[contains(@class, 'autocomplete')]")
+      highlighted_element.click()
+
     else:
       element.clear()
       info = self.fake_info.fill_valid_value(element)
