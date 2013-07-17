@@ -38,7 +38,7 @@ class Page(object):
 
   def login(self):
     try:
-      self.driver.get(self.url)
+      #self.driver.get(self.url)
     
       existing_application = self.driver.find_element_by_id('choose-sign-in')
       existing_application.click()
@@ -57,6 +57,26 @@ class Page(object):
     except Exception, e:
       print "***Login failed***"
       raise e
+
+  def create_user(self):
+    
+    first_time_applying = self.driver.find_element_by_id('choose-start-app')    
+    first_time_applying.click()
+
+    email_address_field = self.driver.find_element_by_id('id_email')
+    first_name_field = self.driver.find_element_by_id('id_first_name')
+    last_name_field = self.driver.find_element_by_id('id_last_name')
+    
+    first_name = self.fake_info.fill_valid_value(last_name_field)
+    last_name = self.fake_info.fill_valid_value(first_name_field)
+    email_address = 'ogriffin+OARS2@2u.com'
+
+    email_address.send_keys(email_address)
+    first_name.send_keys(first_name)
+    last_name.send_keys(last_name)
+
+    start_a_new_application = self.driver.find_element_by_xpath("//a[contains(@class, 'create-account')]")
+    #start_a_new_application.click()
     
   def change_password(self):
     change_password_button = self.driver.find_element_by_class_name('action leave reset-password')

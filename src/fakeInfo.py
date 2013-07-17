@@ -1,11 +1,19 @@
 from faker import Faker
 import random, decimal
 
-#inherits from Faker. used to generate fake data
+#inherits from Faker. used to generate fake data.
 class FakeData(Faker):
+
+  first_name = None
+  last_name = None
+  email = None
 
   def __init__(self):
     super(FakeData, self).__init__()
+    #needs work
+    first_name = self.first_name()
+    last_name = self.last_name()
+    email = 'ogriffin+oars1@2u.com'
 		
   def _fake_date(self, date_format):
     year = random.choice(range(1950, 2000))
@@ -19,9 +27,9 @@ class FakeData(Faker):
 
   def _fake_name(self, element_id):
     if 'first' in element_id or 'middle' in element_id:
-      return self.first_name()
+      return self.first_name
     elif 'last' in element_id and 'name' in element_id:
-      return self.last_name()
+      return self.last_name
     elif 'preferred' in element_id:
       return self.name()
     elif 'alternate' in element_id:

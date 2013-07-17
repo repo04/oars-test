@@ -5,6 +5,7 @@ class LandingPage(page):
   def __init__(self, args):
     # initialize parent class
     super(LandingPage, self).__init__(args)
+    self.driver.get(self.url)
 
 class PersonalInformation(page):
   def __init__(self, args):
