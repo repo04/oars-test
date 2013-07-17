@@ -1,13 +1,11 @@
 from faker import Faker
 import random, decimal
 
-#uses data to generate fake info
-class FakeData(object):
-
-  faker = None
+#inherits from Faker. used to generate fake data
+class FakeData(Faker):
 
   def __init__(self):
-    self.faker = Faker()
+    super(FakeData, self).__init__()
 		
   def _fake_date(self, date_format):
     year = random.choice(range(1950, 2000))
@@ -21,13 +19,13 @@ class FakeData(object):
 
   def _fake_name(self, element_id):
     if 'first' in element_id or 'middle' in element_id:
-      return self.faker.first_name()
+      return self.first_name()
     elif 'last' in element_id and 'name' in element_id:
-      return self.faker.last_name()
+      return self.last_name()
     elif 'preferred' in element_id:
-      return self.faker.name()
+      return self.name()
     elif 'alternate' in element_id:
-      return self.faker.last_name()
+      return self.last_name()
 
   def _fake_phone(self, element_id):
     num1 = random.choice(range(100, 1000))
@@ -36,7 +34,7 @@ class FakeData(object):
 
   def _fake_address(self, element_id):
     if '1' in element_id:
-      return self.faker.street_address()
+      return self.street_address()
     else: 
       return 'Suite 7B'
 
@@ -48,15 +46,15 @@ class FakeData(object):
     elif '.address' in element_id:
       return self._fake_address(element_id)
     elif 'city' in element_id:
-      return self.faker.city()
+      return self.city()
     elif 'postal' in element_id:
-      return self.faker.zip_code()
+      return self.zip_code()
     elif 'date' in element_id:
       return self._fake_date(element.get_attribute('class'))
     elif 'year' in element_id:
       return random.choice(range(1950, 2000))
     elif 'company' in element_id or 'employer' in element_id:
-      return self.faker.company()
+      return self.company()
     elif 'email' in element_id:
       return 'ogriffin+oars1@2u.com'
     elif 'phone' in element_id:
@@ -64,13 +62,12 @@ class FakeData(object):
     elif 'security' in element_id:
       return '123-45-6789'
     elif 'university' in element_id:
-      return self.faker.city()+' University'
+      return self.city()+' University'
     elif 'language' in element_id:
       return 'Latin'
     elif 'score' in element_id:
       return random.choice(range(100,800))
     elif 'gpa' in element_id:
       return str(decimal.Decimal(random.randrange(41))/decimal.Decimal(10))
-
     else:
       return 'filler-value'

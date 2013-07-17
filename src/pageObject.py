@@ -5,9 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-#import personalInformation, professionalExperience, academicBackground     
 import fakeInfo
-
 
 
 class Page(object):
@@ -31,7 +29,7 @@ class Page(object):
     self.driver = args['driver']
     
     self.index = index
-    self.wait = WebDriverWait(self.driver, 10)
+    self.wait = WebDriverWait(self.driver, 25)
 
     # creates list of different sections, i.e. Professional Experience
     self.navigation_sections = self.driver.find_elements_by_class_name('icon')
@@ -80,52 +78,6 @@ class Page(object):
   def teardown(self):
     self.driver.close()
 
-
-  '''def complete(self):
-    form = self.sections[self.index].info()
-
-    for field in form:
-      #try:
-        #prints out field type first
-        print '***',form[field][0],'***'
-        if form[field][0]=='text_box':
-          print '***', field,'***'
-          text_box = self.driver.find_element_by_id(form[field][2])
-          text_box.clear()
-          text_box.send_keys(form[field][3])
-
-        elif form[field][0]=='radio_button':
-          print '***', field,'***'
-          radio_button = self.driver.find_element_by_id(form[field][2])
-          radio_button.click()
-
-          if form[field][3]!='':
-            element = self.wait.until(EC.element_to_be_clickable((By.ID, form[field][3])))
-
-        elif form[field][0]=='combo_box':
-          print '***', field,'***'
-          combo_box = self.driver.find_element_by_id(form[field][2])
-          select = Select(combo_box)
-          select.select_by_visible_text(form[field][3])
-
-        elif form[field][0]=='add_button':
-          print '***', field, '***'
-          add_button = self.driver.find_element_by_link_text(form[field][2])
-          add_button.click()
-
-        elif form[field][0]=='save_button':
-          print '***', field, '***'
-          self.driver.execute_script("document.getElementsByClassName('button medium action save')["+form[field][2]+"].click()")
-        
-        elif form[field][0]=='attach_a_file':
-          print '***', field, '***'
-          attach_button = self.driver.find_element_by_name(form[field][2])
-          attach_button.send_keys(form[field][3])
-      #except Exception, e:
-       # raise e'''
-
-#alternate way of filling section below
-
   def _fill_text(self, element):
     
     print element.tag_name, element.get_attribute('id'), "sending keys"
@@ -173,11 +125,19 @@ class Page(object):
             element.click()
 
   def _attach_a_file(self, element, fieldset):
-    print 'Attaching file'
+    print 'Attaching file:', 'test_doc'
+    
+    #path to file
     element.send_keys('/Users/ogriffin/Desktop/test_doc.pdf')
-    time.sleep(1)
+    
+    self._wait_for_upload_to_complete(element, fieldset)
+    
     print 'Upload Complete'
 
+  def _wait_for_upload_to_complete(self, element, fieldset):
+    button_name = ''
+    while 'test_doc' not in button_name:
+      button_name = fieldset.find_element_by_xpath(".//a[@class='button']").text
 
   def _inline_section(self, element):
     print 'adding'
@@ -189,11 +149,13 @@ class Page(object):
    
     #finds input, select and fieldset tags for the newly expanded inline section    
     sub_tr = element.find_element_by_xpath(".//tr[@class='editing']")
-    inputs = sub_tr.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']|.//input[@type='file']")
+    inputs = sub_tr.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']")
+    inputs_file = sub_tr.find_elements_by_xpath(".//input[@type='file']")
     fieldset = sub_tr.find_element_by_xpath(".//fieldset")
     
     self._sort_and_fill(inputs, fieldset)
-    
+    self._sort_and_fill(inputs_file, sub_tr)
+
     #saves info after filling in section
     save_button.click()
     
