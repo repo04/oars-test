@@ -10,7 +10,7 @@ class FakeData(object):
     self.faker = Faker()
 		
   def _fake_date(self, date_format):
-    year = random.choice(range(1950, 2013))
+    year = random.choice(range(1950, 2000))
     month = random.choice(range(1, 12))
     day = random.choice(range(1, 30))
 
@@ -30,9 +30,15 @@ class FakeData(object):
       return self.faker.last_name()
 
   def _fake_phone(self, element_id):
-    num1 = random.choice(range(100,1000))
-    num2 = random.choice(range(1000,10000))
+    num1 = random.choice(range(100, 1000))
+    num2 = random.choice(range(1000, 10000))
     return str(num1)+'-'+'555'+'-'+str(num2)
+
+  def _fake_address(self, element_id):
+    if '1' in element_id:
+      return self.faker.street_address()
+    else: 
+      return 'Suite 7B'
 
   def fill_valid_value(self, element):
     element_id = element.get_attribute('id')
@@ -40,10 +46,7 @@ class FakeData(object):
     if 'name' in element_id:
       return self._fake_name(element.get_attribute('id'))
     elif '.address' in element_id:
-      if '1' in element_id:
-        return self.faker.street_address()
-      else: 
-        return 'Suite 7B'
+      return self._fake_address(element_id)
     elif 'city' in element_id:
       return self.faker.city()
     elif 'postal' in element_id:
@@ -51,11 +54,11 @@ class FakeData(object):
     elif 'date' in element_id:
       return self._fake_date(element.get_attribute('class'))
     elif 'year' in element_id:
-      return random.choice(range(1900,2014))
+      return random.choice(range(1950, 2000))
     elif 'company' in element_id or 'employer' in element_id:
       return self.faker.company()
     elif 'email' in element_id:
-      return self.faker.email()
+      return 'ogriffin+oars1@2u.com'
     elif 'phone' in element_id:
       return self._fake_phone(element.get_attribute('id'))
     elif 'security' in element_id:

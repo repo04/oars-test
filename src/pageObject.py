@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-import personalInformation, professionalExperience, academicBackground     
+#import personalInformation, professionalExperience, academicBackground     
 import fakeInfo
 
 
@@ -22,7 +22,7 @@ class Page(object):
   wait = None
   fake_info = None
 
-  sections = personalInformation, professionalExperience, academicBackground, '', ''
+  #sections = personalInformation, professionalExperience, academicBackground, '', ''
 
   def __init__(self, args, index = None):
     self.test = args['test']
@@ -31,7 +31,7 @@ class Page(object):
     self.driver = args['driver']
     
     self.index = index
-    self.wait = WebDriverWait(self.driver, 5)
+    self.wait = WebDriverWait(self.driver, 10)
 
     # creates list of different sections, i.e. Professional Experience
     self.navigation_sections = self.driver.find_elements_by_class_name('icon')
@@ -129,23 +129,22 @@ class Page(object):
   def _fill_text(self, element):
     
     print element.tag_name, element.get_attribute('id'), "sending keys"
-    
-    if 'autocomplete' in element.get_attribute('class'):
-      k = Keys()
-      #temp value: 'Mar' is temporarily being used because it is triggering the autocomplete dropdown for the three autocomplete textboxes
-      element.send_keys('Mar')
+    if element.is_displayed()==True:
+      if 'autocomplete' in element.get_attribute('class'):
+        k = Keys()
+        #temp value: 'Mar' is temporarily being used because it is triggering the autocomplete dropdown for the three autocomplete textboxes
+        element.send_keys('Mar')
       
-      element.send_keys(k.ARROW_DOWN)
+        element.send_keys(k.ARROW_DOWN)
       
-      self.wait.until(EC.element_to_be_clickable((By.XPATH, "//li[contains(@class, 'autocomplete')]")))
+        self.wait.until(EC.element_to_be_clickable((By.XPATH, "//li[contains(@class, 'autocomplete')]")))
       
-      highlighted_element = self.driver.find_element_by_xpath("//li[contains(@class, 'autocomplete')]")
-      highlighted_element.click()
-
-    else:
-      element.clear()
-      info = self.fake_info.fill_valid_value(element)
-      element.send_keys(info)
+        highlighted_element = self.driver.find_element_by_xpath("//li[contains(@class, 'autocomplete')]")
+        highlighted_element.click()
+      else:
+        element.clear()
+        info = self.fake_info.fill_valid_value(element)
+        element.send_keys(info)
     
   def _select_combo(self, element, option):
     print element.get_attribute('id'), 'selecting'
@@ -153,7 +152,7 @@ class Page(object):
     select.select_by_index(option)
 
   def _click_radio(self, element, fieldset):
-    print "radio button"
+    print 'radio button'
 
     #finds all children of fieldset tag
     for sub_node in fieldset.find_elements_by_xpath("*"):
@@ -173,6 +172,13 @@ class Page(object):
             print element.get_attribute('id'), 'no'
             element.click()
 
+  def _attach_a_file(self, element, fieldset):
+    print 'Attaching file'
+    element.send_keys('/Users/ogriffin/Desktop/test_doc.pdf')
+    time.sleep(1)
+    print 'Upload Complete'
+
+
   def _inline_section(self, element):
     print 'adding'
     add_button = element.find_element_by_xpath(".//a[contains(@class, 'button action medium add')]")
@@ -183,14 +189,15 @@ class Page(object):
    
     #finds input, select and fieldset tags for the newly expanded inline section    
     sub_tr = element.find_element_by_xpath(".//tr[@class='editing']")
-    inputs = sub_tr.find_elements_by_xpath(".//input[@id!='']|.//select[@id!='']")
+    inputs = sub_tr.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']|.//input[@type='file']")
     fieldset = sub_tr.find_element_by_xpath(".//fieldset")
     
     self._sort_and_fill(inputs, fieldset)
     
     #saves info after filling in section
     save_button.click()
-
+    
+    print '**********'
     print 'saving'
 
   def _sort_and_fill(self, inputs, fieldset=None):
@@ -199,7 +206,6 @@ class Page(object):
     while index < len(inputs):
       field = inputs[index]
       print '*********'
-      
       #handles state field in a special manner because the state field switches from a text box
       #to a combo box if the US is selected as the country
       if 'location' in field.get_attribute('id'):
@@ -207,7 +213,7 @@ class Page(object):
         self._select_combo(state_field, 1)
       
       #checks to see if a text field is visible then sends keys.
-      elif field.get_attribute('type')=='text' and field.is_displayed()==True:
+      elif field.get_attribute('type')=='text' or field.get_attribute('type')=='email' and field.is_displayed()==True:
         self._fill_text(field)
 
       #selects yes or no depending on whether button triggers a node to expand
@@ -217,7 +223,10 @@ class Page(object):
       #selects the first option in combo boxes
       elif field.tag_name=='select':
         self._select_combo(field, 1)
-      
+
+      elif field.get_attribute('type')=='file':
+        self._attach_a_file(field, fieldset)
+        
       index += 1 
 
   def auto_fill(self):
@@ -235,7 +244,7 @@ class Page(object):
       #only evaluates elements on current page
       if tag.is_displayed()==True:
         if tag.tag_name=='fieldset':
-          inputs = tag.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']")
+          inputs = tag.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']|.//input[@type='file']")
           #calls _sort_and_fill() method using input/select element and the fieldset tag of its ancestral node 
           self._sort_and_fill(inputs, tag)
         elif tag.tag_name=='section':

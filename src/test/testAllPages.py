@@ -17,3 +17,11 @@ def test(args):
   acad_background = pages.AcademicBackground(args)
   acad_background.navigate_to()
   acad_background.auto_fill()
+
+  application_uploads = pages.ApplicationUploads(args)
+  application_uploads.navigate_to()
+  application_uploads.auto_fill()
+
+  recommendations = pages.Recommendations(args)
+  recommendations.navigate_to()
+  recommendations.auto_fill()
