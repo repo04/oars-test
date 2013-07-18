@@ -1,5 +1,5 @@
 from faker import Faker
-import random, decimal, time
+import random, decimal, time, os
 
 #inherits from Faker. used to generate fake data.
 class FakeData(Faker):
@@ -7,14 +7,18 @@ class FakeData(Faker):
   firstname = None
   lastname = None
   email = None
+  password = None
+  path_to_test_doc = None
 
   def __init__(self):
     super(FakeData, self).__init__()
-    name = self.name().split()
     
-    self.firstname = name[0]
-    self.lastname = name[1]
-    self.email = 'ogriffin+oars1@2u.com'''
+    self.firstname = self.first_name()
+    self.lastname = self.last_name()
+    self.email = 'ogriffin+oars1@2u.com'
+    self.password = 'qwerty'
+
+    self.path_to_test_doc = os.path.abspath('test_doc.pdf')
     
   def _fake_date(self, date_format):
     year = random.choice(range(1950, 2000))

@@ -49,8 +49,8 @@ class Page(object):
       password_field = self.driver.find_element_by_name('password')
       sign_in_button = self.driver.find_element_by_id('id_do_sign_in')
     
-      email_address.send_keys('ogriffin+OARS1@2u.com')
-      password_field.send_keys('qwerty')
+      email_address.send_keys(self.fake_info.email)
+      password_field.send_keys(self.fake_info.password)
       sign_in_button.click()
 
       element = self.wait.until(EC.element_to_be_clickable((By.CLASS_NAME,'icon')))
@@ -69,11 +69,11 @@ class Page(object):
     
     first_name = self.fake_info.fill_valid_value(last_name_field)
     last_name = self.fake_info.fill_valid_value(first_name_field)
-    email_address = 'ogriffin+OARS2@2u.com'
+    email_address = self.fake_info.email
 
-    email_address.send_keys(email_address)
-    first_name.send_keys(first_name)
-    last_name.send_keys(last_name)
+    email_address_field.send_keys(email_address)
+    first_name_field.send_keys(first_name)
+    last_name_field.send_keys(last_name)
 
     start_a_new_application = self.driver.find_element_by_xpath("//a[contains(@class, 'create-account')]")
     #start_a_new_application.click()
@@ -147,8 +147,9 @@ class Page(object):
   def _attach_a_file(self, element, fieldset):
     print 'Attaching file:', 'test_doc'
     
-    #path to file
-    element.send_keys('/Users/ogriffin/Desktop/test_doc.pdf')
+    #path to 
+    print 'path to file:', self.fake_info.path_to_test_doc
+    element.send_keys(self.fake_info.path_to_test_doc)
     
     self._wait_for_upload_to_complete(element, fieldset)
     
