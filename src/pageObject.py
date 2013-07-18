@@ -69,7 +69,7 @@ class Page(object):
     
     first_name = self.fake_info.fill_valid_value(last_name_field)
     last_name = self.fake_info.fill_valid_value(first_name_field)
-    email_address = self.fake_info.email
+    email_address = self.fake_info.new_email
 
     email_address_field.send_keys(email_address)
     first_name_field.send_keys(first_name)

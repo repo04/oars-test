@@ -7,6 +7,7 @@ class FakeData(Faker):
   firstname = None
   lastname = None
   email = None
+  new_email = None
   password = None
   path_to_test_doc = None
 
@@ -16,6 +17,7 @@ class FakeData(Faker):
     self.firstname = self.first_name()
     self.lastname = self.last_name()
     self.email = 'ogriffin+oars1@2u.com'
+    self.new_email = 'ogriffin+'+str(random.choice(range(100, 1000)))+'@2u.com'
     self.password = 'qwerty'
 
     self.path_to_test_doc = os.path.abspath('test_doc.pdf')
