@@ -4,16 +4,16 @@ import random, decimal, time
 #inherits from Faker. used to generate fake data.
 class FakeData(Faker):
 
-  first_name = None
-  last_name = None
+  firstname = None
+  lastname = None
   email = None
 
   def __init__(self):
     super(FakeData, self).__init__()
     name = self.name().split()
     
-    self.first_name = name[0]
-    self.last_name = name[1]
+    self.firstname = name[0]
+    self.lastname = name[1]
     self.email = 'ogriffin+oars1@2u.com'''
     
   def _fake_date(self, date_format):
@@ -27,10 +27,12 @@ class FakeData(Faker):
       return str(month)+'/'+str(year)
 
   def _fake_name(self, element_id):
-    if 'first' in element_id or 'middle' in element_id:
-      return self.first_name
+    if 'first' in element_id:
+      return self.firstname
+    elif 'middle' in element_id:
+      return ''
     elif 'last' in element_id and 'name' in element_id:
-      return self.last_name
+      return self.lastname
     elif 'preferred' in element_id:
       return self.name()
     elif 'alternate' in element_id:
