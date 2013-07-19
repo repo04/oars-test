@@ -29,7 +29,7 @@ class Page(object):
     self.driver = args['driver']
     
     self.index = index
-    self.wait = WebDriverWait(self.driver, 25)
+    self.wait = WebDriverWait(self.driver, 10)
 
     # creates list of different sections, i.e. Professional Experience
     self.navigation_sections = self.driver.find_elements_by_class_name('icon')
@@ -43,7 +43,7 @@ class Page(object):
       existing_application = self.driver.find_element_by_id('choose-sign-in')
       existing_application.click()
 
-      element = self.wait.until(EC.element_to_be_clickable((By.ID,'id_do_sign_in')))
+      wait_element = self.wait.until(EC.element_to_be_clickable((By.ID,'id_do_sign_in')))
 
       email_address = self.driver.find_element_by_name('login')
       password_field = self.driver.find_element_by_name('password')
@@ -53,7 +53,7 @@ class Page(object):
       password_field.send_keys(self.fake_info.password)
       sign_in_button.click()
 
-      element = self.wait.until(EC.element_to_be_clickable((By.CLASS_NAME,'icon')))
+      wait_element = self.wait.until(EC.element_to_be_clickable((By.CLASS_NAME,'icon')))
     except Exception, e:
       print "***Login failed***"
       raise e
@@ -76,8 +76,102 @@ class Page(object):
     last_name_field.send_keys(last_name)
 
     start_a_new_application = self.driver.find_element_by_xpath("//a[contains(@class, 'create-account')]")
-    #start_a_new_application.click()
+    start_a_new_application.click()
+
+    self._check_email()
+
+    self.fake_info.email = self.fake_info.new_email
+
+    #script for 
+
+  def _check_email(self):
+    self._sign_in_to_gmail()
+    self._check_for_and_click_email_verification_link()
+    self._switch_windows()
+    self._set_password()
     
+  def _sign_in_to_gmail(self):
+    self.driver.get('https://gmail.com')
+
+    wait_element = self.wait.until(EC.element_to_be_clickable((By.ID,'Email')))
+
+    username_field = self.driver.find_element_by_id('Email')
+    password_field = self.driver.find_element_by_id('Passwd')
+    sign_in_button = self.driver.find_element_by_xpath("//input[@type='submit']")
+
+    username_field.send_keys(self.fake_info.email)
+    password_field.send_keys(self.fake_info.password)
+    sign_in_button.click()
+
+  def _check_for_and_click_email_verification_link(self):
+    print '**********'
+    print 'navigating to gmail'
+    
+    wait_element = self.wait.until(EC.element_to_be_clickable((By.XPATH, "//span[contains(@email,'.edu')]")))
+      
+    email_from_program = self.driver.find_element_by_xpath("//span[contains(@email,'.edu')]")
+    email_from_program.click()
+  
+    wait_element = self.wait.until(EC.element_to_be_clickable((By.PARTIAL_LINK_TEXT, self.url)))
+
+    #grabs all possible links in email. others may exist in the same email
+    #thread due to the test being run multiple times
+    verification_links = self.driver.find_elements_by_xpath("//a[contains(@href, '"+self.url+"')]")
+    
+    print '**********'
+    print 'opening confirmation email and clicking verifcation link'    
+
+    for link in verification_links:
+      if link.is_displayed()==True:
+        print '**********'
+        print 'clicking link'
+        link.click()
+
+  def _switch_windows(self):
+    #sleep to be replaced by self.has_new_window_loaded()
+    time.sleep(4)
+
+    print '**********'
+    print 'switching windows to: '+self.driver.title
+    latest_window = self.driver.window_handles[-1]
+    self.driver.switch_to_window(latest_window)  
+
+    '''while self._has_new_window_loaded==True:
+      pass
+
+  def _has_new_window_loaded(self):
+    for handle in self.driver.window_handles:
+      self.driver.switch_to_window(handle)
+      print self.driver.title
+      if '2U Mail' not in self.driver.title:
+        print '**********'
+        print 'switching windows to: '+self.driver.title
+        return True
+      return False'''
+
+    '''latest_window = self.driver.window_handles[-1]
+    self.driver.switch_to_window(latest_window)
+    print '**********'
+    print 'switching windows to: '+self.driver.title'''
+
+  def _set_password(self):
+    wait_element = self.wait.until(EC.element_to_be_clickable((By.ID, 'in_password')))
+    
+    print '**********'
+    print 'setting password'
+
+    new_password_field = self.driver.find_element_by_id('in_password')
+    confirm_new_password_field = self.driver.find_element_by_id('in_confirm_password')
+    set_new_password_button = self.driver.find_element_by_xpath("//a[contains(@class, 'set-password')]")
+
+    new_password_field.send_keys(self.fake_info.password)
+    confirm_new_password_field.send_keys(self.fake_info.password)
+    set_new_password_button.click()
+
+    print '**********'
+    print 'new user created: '+self.fake_info.email+'\n'
+    print '\nWelcome to OARS!\n'
+
   def change_password(self):
     change_password_button = self.driver.find_element_by_class_name('action leave reset-password')
     change_password_button.click()
@@ -87,7 +181,7 @@ class Page(object):
     sign_out_button.click()
     alert = self.driver.switch_to_alert()
     alert.accept()
-    element = self.wait.until(EC.element_to_be_clickable((By.ID, 'id_email')))
+    wait_element = self.wait.until(EC.element_to_be_clickable((By.ID, 'id_email')))
 
   def navigate_to(self):
     try:
@@ -109,7 +203,7 @@ class Page(object):
       
         element.send_keys(k.ARROW_DOWN)
       
-        self.wait.until(EC.element_to_be_clickable((By.XPATH, "//li[contains(@class, 'autocomplete')]")))
+        wait_element = self.wait.until(EC.element_to_be_clickable((By.XPATH, "//li[contains(@class, 'autocomplete')]")))
       
         highlighted_element = self.driver.find_element_by_xpath("//li[contains(@class, 'autocomplete')]")
         highlighted_element.click()

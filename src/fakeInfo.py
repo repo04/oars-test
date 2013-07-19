@@ -16,9 +16,9 @@ class FakeData(Faker):
     
     self.firstname = self.first_name()
     self.lastname = self.last_name()
-    self.email = 'ogriffin+oars1@2u.com'
-    self.new_email = 'ogriffin+'+str(random.choice(range(100, 1000)))+'@2u.com'
-    self.password = 'qwerty'
+    self.email = 'oars.tests@2u.com'
+    self.new_email = 'oars.tests+'+str(random.choice(range(10, 100)))+'@2u.com'
+    self.password = 'Moodle1!'
 
     self.path_to_test_doc = os.path.abspath('test_doc.pdf')
     
@@ -73,7 +73,7 @@ class FakeData(Faker):
     elif 'company' in element_id or 'employer' in element_id:
       return self.company()
     elif 'email' in element_id:
-      return 'ogriffin+oars1@2u.com'
+      return self.email
     elif 'phone' in element_id:
       return self._fake_phone(element.get_attribute('id'))
     elif 'security' in element_id:
