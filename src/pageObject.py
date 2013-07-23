@@ -29,34 +29,34 @@ class Page(object):
     self.driver = args['driver']
     
     self.index = index
-    self.wait = WebDriverWait(self.driver, 10)
+    self.wait = WebDriverWait(self.driver, 15)
 
     # creates list of different sections, i.e. Professional Experience
-    self.navigation_sections = self.driver.find_elements_by_class_name('icon')
+    self.navigation_sections = self.driver.find_elements_by_xpath("//a[contains(@class, 'big button')]")
 
     self.fake_info = fakeInfo.FakeData()
 
   def login(self):
-    try:
+    #try:
       #self.driver.get(self.url)
     
-      existing_application = self.driver.find_element_by_id('choose-sign-in')
-      existing_application.click()
+    existing_application = self.driver.find_element_by_id('choose-sign-in')
+    existing_application.click()
 
-      wait_element = self.wait.until(EC.element_to_be_clickable((By.ID,'id_do_sign_in')))
+    wait_element = self.wait.until(EC.element_to_be_clickable((By.ID,'id_do_sign_in')))
 
-      email_address = self.driver.find_element_by_name('login')
-      password_field = self.driver.find_element_by_name('password')
-      sign_in_button = self.driver.find_element_by_id('id_do_sign_in')
+    email_address = self.driver.find_element_by_name('login')
+    password_field = self.driver.find_element_by_name('password')
+    sign_in_button = self.driver.find_element_by_id('id_do_sign_in')
     
-      email_address.send_keys(self.fake_info.email)
-      password_field.send_keys(self.fake_info.password)
-      sign_in_button.click()
+    email_address.send_keys(self.fake_info.email)
+    password_field.send_keys(self.fake_info.password)
+    sign_in_button.click()
 
-      wait_element = self.wait.until(EC.element_to_be_clickable((By.CLASS_NAME,'icon')))
-    except Exception, e:
-      print "***Login failed***"
-      raise e
+    wait_element = self.wait.until(EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'big button')]")))
+    # except Exception, e:
+    #  print "***Login failed***"
+     # raise e
 
   def create_user(self):
     
@@ -79,16 +79,17 @@ class Page(object):
     start_a_new_application.click()
 
     self._check_email()
-
+    self._switch_windows()
     self.fake_info.email = self.fake_info.new_email
+    self._set_password()
 
-    #script for 
-
+    print '**********'
+    print 'new user created: '+self.fake_info.email+'\n'
+    print '\nWelcome to OARS!\n'
+    
   def _check_email(self):
     self._sign_in_to_gmail()
     self._check_for_and_click_email_verification_link()
-    self._switch_windows()
-    self._set_password()
     
   def _sign_in_to_gmail(self):
     self.driver.get('https://gmail.com')
@@ -119,7 +120,7 @@ class Page(object):
     verification_links = self.driver.find_elements_by_xpath("//a[contains(@href, '"+self.url+"')]")
     
     print '**********'
-    print 'opening confirmation email and clicking verifcation link'    
+    print 'opening confirmation email and clicking verification link'    
 
     for link in verification_links:
       if link.is_displayed()==True:
@@ -168,10 +169,6 @@ class Page(object):
     confirm_new_password_field.send_keys(self.fake_info.password)
     set_new_password_button.click()
 
-    print '**********'
-    print 'new user created: '+self.fake_info.email+'\n'
-    print '\nWelcome to OARS!\n'
-
   def change_password(self):
     change_password_button = self.driver.find_element_by_class_name('action leave reset-password')
     change_password_button.click()
@@ -184,15 +181,17 @@ class Page(object):
     wait_element = self.wait.until(EC.element_to_be_clickable((By.ID, 'id_email')))
 
   def navigate_to(self):
-    try:
-      self.navigation_sections[self.index].click()
-    except Exception, e:
-      raise e 
+    #try:
+    self.navigation_sections[self.index].click()
+    #except Exception, e:
+     # raise e 
 
   def teardown(self):
     self.driver.close()
 
-  def _fill_text(self, element):
+
+
+  '''def _fill_text(self, element):
     
     print element.tag_name, element.get_attribute('id'), "sending keys"
     if element.is_displayed()==True:
@@ -327,4 +326,4 @@ class Page(object):
         elif tag.tag_name=='section':
           self._inline_section(tag)
     
-    print '***end***'
+    print "***end***"'''

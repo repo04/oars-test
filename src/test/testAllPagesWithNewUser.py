@@ -4,10 +4,9 @@ sys.path.insert(0, './src')
 import pages, fillData
 
 def test(args):
-
   #setup
   landing_page = pages.LandingPage(args)
-  landing_page.login()
+  landing_page.create_user()
   f=fillData.Filler()
   
   #these pages needed to be instantiated after logging in or else error occurs

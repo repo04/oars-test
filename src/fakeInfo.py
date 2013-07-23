@@ -17,7 +17,7 @@ class FakeData(Faker):
     self.firstname = self.first_name()
     self.lastname = self.last_name()
     self.email = 'oars.tests@2u.com'
-    self.new_email = 'oars.tests+'+str(random.choice(range(10, 100)))+'@2u.com'
+    self.new_email = 'oars.tests+'+str(random.choice(range(100, 1000)))+'@2u.com'
     self.password = 'Moodle1!'
 
     self.path_to_test_doc = os.path.abspath('test_doc.pdf')
