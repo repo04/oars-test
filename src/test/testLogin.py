@@ -1,10 +1,14 @@
 #!/usr/bin/env python
-import sys
-sys.path.insert(0, './src')
-import pages
+from pages import LandingPage
+
 
 def test(args):
-  #setup/test	
-  landing_page = pages.LandingPage(args)
-  landing_page.login()
-  landing_page.teardown()
+  #setup
+  driver = args['driver']
+  program_url = args['url']
+  data = args['data']
+
+  landing_page = LandingPage(driver, 'Login Page', program_url)
+
+  #test
+  landing_page.login(data)

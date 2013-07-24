@@ -1,16 +1,16 @@
 #!/usr/bin/env python
-import sys
-sys.path.insert(0, './src')
-import pages, fillData
+from pages import LandingPage
+
 
 def test(args):
   #setup
-  landing_page = pages.LandingPage(args)
-  landing_page.login()
-  f=fillData.Filler()
+  driver = args['driver']
+  program_url = args['url']
+  data = args['data']
 
-  prof_exp = pages.ProfessionalExperience(args)
-  
+  landing_page = LandingPage(driver, 'Login Page', program_url)
+  landing_page.login(data)
+
   #test
-  prof_exp.navigate_to()
-  f.auto_fill()
+  prof_exp = landing_page.navigate_to('Professional Experience')
+  data.auto_fill(prof_exp)

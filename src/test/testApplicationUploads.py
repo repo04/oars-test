@@ -1,16 +1,16 @@
 #!/usr/bin/env python
-import sys
-sys.path.insert(0, './src')
-import pages, fillData
+from pages import LandingPage
+
 
 def test(args):
   #setup
-  landing_page = pages.LandingPage(args)
-  landing_page.login()
-  f=fillData.Filler()
+  driver = args['driver']
+  program_url = args['url']
+  data = args['data']
 
-  application_uploads = pages.ApplicationUploads(args)
-  
+  landing_page = LandingPage(driver, 'Login Page', program_url)
+  landing_page.login(data)
+
   #test
-  application_uploads.navigate_to()
-  f.auto_fill(application_uploads)
+  application_uploads = landing_page.navigate_to('Application Uploads')
+  data.auto_fill(application_uploads)

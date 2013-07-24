@@ -1,17 +1,17 @@
 #!/usr/bin/env python
-import sys
-sys.path.insert(0, './src')
-import pages, fillData
+from pages import LandingPage
+
 
 def test(args):
   #setup
-  landing_page = pages.LandingPage(args)
-  landing_page.login()
-  f=fillData.Filler()
+  driver = args['driver']
+  program_url = args['url']
+  data = args['data']
 
-  recommendations = pages.Recommendations(args)
-  
+  landing_page = LandingPage(driver, 'Login Page', program_url)
+  landing_page.login(data)
+
   #test
-  recommendations.navigate_to()
-  f.auto_fill(recommendations)
+  recommendations = landing_page.navigate_to('Recommendations')
+  data.auto_fill(recommendations)
   recommendations.teardown()

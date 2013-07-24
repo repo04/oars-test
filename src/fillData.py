@@ -1,5 +1,5 @@
 from fakeInfo import FakeData
-import random, decimal, time, os
+import random, time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait, Select
@@ -9,10 +9,12 @@ from selenium.webdriver.support import expected_conditions as EC
 class Filler(object):
 
   fake_info = None
+  program_url = None
 
-  def __init__(self):
-	self.fake_info = FakeData()
-		
+  def __init__(self, url):
+    self.fake_info = FakeData()
+    self.program_url = url
+
   def _fill_text(self, element, page=None):
     
     print element.tag_name, element.get_attribute('id'), "sending keys"
@@ -63,11 +65,11 @@ class Filler(object):
           #randomly choose one of the three options for gender
           gender_inputs = fieldset.find_elements_by_xpath(".//input[contains(@id, 'gender')]")
           random_number = random.choice(range(0,3))
-          print 'clicking: '+gender_inputs[random_number].get_attribute('id')
+          print gender_inputs[random_number].get_attribute('id')
           gender_inputs[random_number].click()
           break
         except Exception, e:
-          print 'fire in the hole'
+          pass
 
 
   def _attach_a_file(self, element, fieldset, page):    

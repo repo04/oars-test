@@ -1,32 +1,34 @@
 #!/usr/bin/env python
-import sys
-sys.path.insert(0, './src')
-import pages, fillData
+from pages import LandingPage
+
 
 def test(args):
   #setup
-  landing_page = pages.LandingPage(args)
-  landing_page.create_user()
-  f=fillData.Filler()
+  driver = args['driver']
+  program_url = args['url']
+  data = args['data']
   
-  #these pages needed to be instantiated after logging in or else error occurs
-  personal_info = pages.PersonalInformation(args)
-  prof_exp = pages.ProfessionalExperience(args)
-  acad_background = pages.AcademicBackground(args)
-  application_uploads = pages.ApplicationUploads(args)
-  recommendations = pages.Recommendations(args)
-
+  landing_page = LandingPage(driver, 'Login Page', program_url)
+  
   #test
-  f.auto_fill(personal_info)
+  landing_page.start_new_app(data)
+  email_page = landing_page.navigate_to('Email')
+  email_page.sign_in_to_gmail(data)
+  email_page.check_for_and_click_email_verification_link(data)
+  email_page.switch_to_newest_window()
+  landing_page.set_password(data)
+
+  personal_info = landing_page.navigate_to('Personal Information')
+  data.auto_fill(personal_info)
   
-  prof_exp.navigate_to()
-  f.auto_fill(prof_exp)
+  prof_exp = personal_info.navigate_to('Professional Experience')
+  data.auto_fill(prof_exp)
 
-  acad_background.navigate_to()
-  f.auto_fill(acad_background)
+  acad_background = prof_exp.navigate_to('Academic Background')
+  data.auto_fill(acad_background)
 
-  application_uploads.navigate_to()
-  f.auto_fill(application_uploads)
+  application_uploads = acad_background.navigate_to('Application Uploads')
+  data.auto_fill(application_uploads)
 
-  recommendations.navigate_to()
-  f.auto_fill(recommendations)
+  recommendations = application_uploads.navigate_to('Recommendations')
+  data.auto_fill(recommendations)

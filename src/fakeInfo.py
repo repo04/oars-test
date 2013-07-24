@@ -1,5 +1,5 @@
 from faker import Faker
-import random, decimal, time, os
+import random, decimal, os
 
 #inherits from Faker. used to generate fake data.
 class FakeData(Faker):
