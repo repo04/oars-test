@@ -5,7 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 
-
+#Used to fill out forms
 class Filler(object):
 
   fake_info = None
@@ -34,7 +34,8 @@ class Filler(object):
         element.clear()
         info = self.fake_info.fill_valid_value(element)
         element.send_keys(info)
-    
+  
+  #selects the first option from a combo box
   def _select_combo(self, element, option):
     print element.get_attribute('id'), 'selecting'
     select = Select(element)
@@ -43,19 +44,19 @@ class Filler(object):
   def _click_radio(self, element, fieldset):
     print 'radio button'
 
-    #finds all children of fieldset tag
-    for sub_node in fieldset.find_elements_by_xpath("*"):  
+    #finds all html children of a fieldset tag
+    for sub_tag in fieldset.find_elements_by_xpath("*"):  
       #iterates through child nodes until it finds the ol child
       #the ol child would carry information about whether or not the radio button is linked to hidden data fields
-      if sub_node.tag_name=='ol':
+      if sub_tag.tag_name=='ol':
         #for radio buttons where a 'yes' would expand a hidden node, the words 'if' or 'location' are used in the ol class attribute
-        if 'if' in sub_node.get_attribute('class') or 'location' in sub_node.get_attribute('class'):
+        if 'if' in sub_tag.get_attribute('class') or 'location' in sub_tag.get_attribute('class'):
           #since 'if' is in the class attribute field we want to find and click the 'yes' radio button
           if 'yes' in element.get_attribute('id'):
             print 'clicking: '+element.get_attribute('id'), 'yes'
             element.click()
         #for radio buttons where a 'no' would expand a hidden node, the word 'not' is used in the ol class attribute
-        elif'not' in sub_node.get_attribute('class'):
+        elif'not' in sub_tag.get_attribute('class'):
           #since 'not' is in the class attribute field we want to find and click the 'no' radio button
           if 'no' in element.get_attribute('id'):
             print 'clicking: '+element.get_attribute('id'), 'no'
@@ -71,7 +72,6 @@ class Filler(object):
         except Exception, e:
           pass
 
-
   def _attach_a_file(self, element, fieldset, page):    
     element = self._check_before_upload(element, fieldset, page)
 
@@ -86,6 +86,12 @@ class Filler(object):
     self._wait_for_upload_to_complete(element, fieldset)
     
     print 'Upload Complete'
+
+  def _click_checkbox(self, element):
+    checkbox = element
+    if checkbox.is_selected()==False:
+      print 'checkbox', checkbox.get_attribute('value')
+      checkbox.click()
 
   def _wait_for_upload_to_complete(self, element, fieldset):
     button_name = ''
@@ -105,10 +111,9 @@ class Filler(object):
       element_after_file_deletion = fieldset.find_element_by_xpath(".//input[@type='file']")
       return element_after_file_deletion
     else:
-      return element           
+      return element                
 
-      
-
+  #inline section...[add more later]
   def _inline_section(self, element, page):
     print 'adding'
     add_button = element.find_element_by_xpath(".//a[contains(@class, 'button action medium add')]")
@@ -141,6 +146,7 @@ class Filler(object):
       #handles state field in a special manner because the state field switches from a text box
       #to a combo box if the US is selected as the country
       if 'location' in field.get_attribute('id'):
+        #refinds the state field because it changes from a text box to a combo box depending on the country selected
         state_field = fieldset.find_element_by_xpath(".//select[contains(@id, 'state')]")
         self._select_combo(state_field, 1)
       
@@ -158,13 +164,18 @@ class Filler(object):
 
       elif field.get_attribute('type')=='file':
         self._attach_a_file(field, fieldset, page)
+
+      elif field.get_attribute('type')=='checkbox':
+        self._click_checkbox(field)
         
       index += 1 
 
+  #takes in a page and fills in text boxes, clicks radio buttons, uploads files, and selects from combo boxes 
   def auto_fill(self, page):
     #temporary. wait for page to load.
     time.sleep(3)
 
+    #this is a list
     #grabs anything with either a fieldset tag or section tag contiaining the word 'inline' in its id field
     fieldsets_inlines = page.driver.find_elements_by_xpath("//fieldset|//section[contains(@id, 'inline')]")
 
@@ -176,7 +187,9 @@ class Filler(object):
       #only evaluates elements on current page
       if tag.is_displayed()==True:
         if tag.tag_name=='fieldset':
-          inputs = tag.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']|.//input[@type='file']")
+          #look for select tags and input tags where id is not the null string
+          #also looks for input tags where type is 'file'
+          inputs = tag.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']|.//input[@type='file']|.//input[@type='checkbox']")
           #calls _sort_and_fill() method using input/select element and the fieldset tag of its ancestral node 
           self._sort_and_fill(inputs, tag, page)
         elif tag.tag_name=='section':

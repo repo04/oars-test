@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-import sys
-import argparse
+import sys, argparse
 from selenium import webdriver
 sys.path.insert(0, './src/')
 from fillData import Filler
@@ -13,10 +12,10 @@ args = parser.parse_args()
 
 arg_map = {}
 arg_map['test'] = args.test
-arg_map['program'] = args.program
-arg_map['url'] = args.url
-arg_map['driver'] = webdriver.Firefox()	#instantiate driver
-arg_map['data'] = Filler(args.url)
+arg_map['program'] = args.program 
+arg_map['url'] = args.url #the url for the program
+arg_map['driver'] = webdriver.Firefox()	#instantiate and store driver
+arg_map['data'] = Filler(args.url) #instantiate and store Filler; used for inputting data on forms
 
 sys.path.insert(0, './src/test/')
 t = __import__(arg_map['test'])

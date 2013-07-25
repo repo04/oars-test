@@ -27,10 +27,10 @@ class FakeData(Faker):
     month = random.choice(range(1, 12))
     day = random.choice(range(1, 30))
 
-    if 'mm-dd-yyyy' in date_format:
-      return str(month)+'/'+str(day)+'/'+str(year)
-    elif 'mm-yyyy' in date_format:
+    if 'mm-yyyy' in date_format:
       return str(month)+'/'+str(year)
+    else:
+      return str(month)+'/'+str(day)+'/'+str(year)
 
   def _fake_name(self, element_id):
     if 'first' in element_id:
@@ -43,6 +43,8 @@ class FakeData(Faker):
       return self.name()
     elif 'alternate' in element_id:
       return self.last_name()
+    elif 'signature' in element_id:
+      return self.firstname, self.lastname
 
   def _fake_phone(self, element_id):
     num1 = random.choice(range(100, 1000))
@@ -58,7 +60,12 @@ class FakeData(Faker):
   def fill_valid_value(self, element):
     element_id = element.get_attribute('id')
     
-    if 'name' in element_id:
+    if 'signature' in element_id:
+      if 'date' in element_id:
+        return self._fake_date(element.get_attribute('class'))
+      else:
+        return self._fake_name(element.get_attribute('id'))
+    elif 'name' in element_id:
       return self._fake_name(element.get_attribute('id'))
     elif '.address' in element_id:
       return self._fake_address(element_id)

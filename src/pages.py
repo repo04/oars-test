@@ -3,8 +3,6 @@ import time
 from pageObject import Page
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-#from selenium.webdriver.common.keys import Keys
-#from selenium.webdriver.support.ui import WebDriverWait
 
 class LandingPage(Page):
   def __init__(self, driver, name, url):
@@ -29,7 +27,7 @@ class LandingPage(Page):
     first_name_field.send_keys(first_name)
     last_name_field.send_keys(last_name)
 
-    start_a_new_application = self.driver.find_element_by_xpath("//a[contains(@class, 'create-account')]")
+    start_a_new_application = self.driver.find_element_by_partial_link_text("new application")
     start_a_new_application.click()
 
   def set_password(self, data):
@@ -40,7 +38,7 @@ class LandingPage(Page):
 
     new_password_field = self.driver.find_element_by_id('in_password')
     confirm_new_password_field = self.driver.find_element_by_id('in_confirm_password')
-    set_new_password_button = self.driver.find_element_by_xpath("//a[contains(@class, 'set-password')]")
+    set_new_password_button = self.driver.find_element_by_partial_link_text("Set my password")
 
     new_password_field.send_keys(data.fake_info.password)
     confirm_new_password_field.send_keys(data.fake_info.password)
@@ -74,6 +72,20 @@ class LandingPage(Page):
     # except Exception, e:
     #  print "***Login failed***"
      # raise e
+
+class PreviewPage(Page):
+  def __init__(self, driver, name):
+    super(PreviewPage, self).__init__(driver, name)
+
+  def continue_to_page(self):
+    time.sleep(2)
+    
+    continue_button = self.driver.find_element_by_xpath('/html/body/div[2]/nav/a[2]')
+    continue_button.click()
+
+  def submit(self):
+    submit_button = self.driver.find_element_by_partial_link_text("Submit")
+    submit_button.click()
 
 class EmailPage(Page):
   def __init__(self, driver, name):
@@ -131,7 +143,6 @@ class EmailPage(Page):
     self.driver.switch_to_window(latest_window)
     print '**********'
     print 'switching windows to: '+self.driver.title
-
 
 class PersonalInformation(page):
   def __init__(self, driver, name):

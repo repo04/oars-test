@@ -9,9 +9,10 @@ def test(args):
   data = args['data']
   
   landing_page = LandingPage(driver, 'Login Page', program_url)
-  
+  landing_page.login(data)
+
   #test
-  landing_page.start_new_app(data)
+  '''landing_page.start_new_app(data)
 
   email_page = landing_page.navigate_to('Email')
   email_page.sign_in_to_gmail(data)
@@ -33,4 +34,11 @@ def test(args):
   data.auto_fill(application_uploads)
 
   recommendations = application_uploads.navigate_to('Recommendations')
+  #needs two recommendations for complete application
   data.auto_fill(recommendations)
+  data.auto_fill(recommendations)'''
+
+  preview_page = landing_page.preview_application()
+  preview_page.continue_to_page()
+  data.auto_fill(preview_page)
+  preview_page.submit()
