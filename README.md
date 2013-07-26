@@ -13,7 +13,7 @@ $ git clone git@github.com:2tor/oars-tests.git
 ```
 $ sudo apt-get install python-pip
 $ sudo easy_install selenium
-$ sudo easy_install 
+$ sudo easy_install faker
 ```
 
 ## TestRunner Commands
