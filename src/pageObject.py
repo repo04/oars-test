@@ -29,7 +29,9 @@ class Page(object):
 
   def save_and_continue(self):
     #save_and_continue_button = self.driver.find_element_by_xpath("//a[text()='Save & Continue']")
-    save_and_continue_button = self.driver.find_element_by_partial_link_text("Save & Continue")
+    #save_and_continue_button = self.driver.find_element_by_partial_link_text("Save & Continue")
+    #save_and_continue_button.click()
+    pass
 
   def preview_application(self):
     time.sleep(3)

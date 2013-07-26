@@ -96,7 +96,10 @@ class Filler(object):
   def _wait_for_upload_to_complete(self, element, fieldset):
     button_name = ''
     while 'test_doc' not in button_name:
-      button_name = fieldset.find_element_by_xpath(".//a[@class='button']").text
+      try:
+        button_name = fieldset.find_element_by_xpath(".//a[@class='button']").text
+      except Exception, e:
+        pass
 
   def _check_before_upload(self, element, fieldset, page):
     upload_button = fieldset.find_element_by_xpath(".//a[@class='button']")

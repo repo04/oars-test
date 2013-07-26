@@ -16,7 +16,7 @@ class FakeData(Faker):
     
     self.firstname = self.first_name()
     self.lastname = self.last_name()
-    self.email = 'oars.tests@2u.com'
+    self.email = 'oars.tests+527@2u.com'
     self.new_email = 'oars.tests+'+str(random.choice(range(100, 1000)))+'@2u.com'
     self.password = 'Moodle1!'
 
@@ -44,7 +44,7 @@ class FakeData(Faker):
     elif 'alternate' in element_id:
       return self.last_name()
     elif 'signature' in element_id:
-      return self.firstname, self.lastname
+      return self.firstname+' '+self.lastname
 
   def _fake_phone(self, element_id):
     num1 = random.choice(range(100, 1000))

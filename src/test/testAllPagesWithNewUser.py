@@ -33,4 +33,5 @@ def test(args):
   data.auto_fill(application_uploads)
 
   recommendations = application_uploads.navigate_to('Recommendations')
+  #needs two recommendations for a complete application
   data.auto_fill(recommendations)

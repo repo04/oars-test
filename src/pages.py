@@ -87,6 +87,27 @@ class PreviewPage(Page):
     submit_button = self.driver.find_element_by_partial_link_text("Submit")
     submit_button.click()
 
+  def submit_with_offline_payment(self):
+    print 'sleeping'
+    time.sleep(3)
+
+    self.driver.switch_to_frame(1)
+    offline_payment_button = self.driver.find_element_by_xpath("//input[contains(@id, 'offline')]")
+    offline_payment_button.click()
+    continue_button = self.driver.find_element_by_partial_link_text("Continue")
+    continue_button.click()
+
+    time.sleep(1)
+
+    continue_button_2 = self.driver.find_element_by_partial_link_text("Continue")
+    continue_button_2.click()
+
+    self.driver.switch_to_default_content()
+
+  def verify_application_submitted(self):
+    print 'verifying that application has been submitted'
+    wait_element = self.wait.until(EC.text_to_be_present_in_element((By.TAG_NAME, 'h4'), 'Your application has been submitted!'))
+
 class EmailPage(Page):
   def __init__(self, driver, name):
     super(EmailPage, self).__init__(driver, name)

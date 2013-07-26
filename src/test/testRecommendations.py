@@ -14,4 +14,4 @@ def test(args):
   #test
   recommendations = landing_page.navigate_to('Recommendations')
   data.auto_fill(recommendations)
-  recommendations.teardown()
+  #recommendations.teardown()
