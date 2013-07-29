@@ -20,4 +20,5 @@ arg_map['data'] = Filler(args.url) #instantiate and store Filler; used for input
 sys.path.insert(0, './src/test/')
 t = __import__(arg_map['test'])
 
+#refer to userNames.py to configure username/password
 test = t.test(arg_map)	#start setup/test

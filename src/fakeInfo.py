@@ -1,26 +1,29 @@
 from faker import Faker
-import random, decimal, os
+import random, decimal, os, userNames
 
 #inherits from Faker. used to generate fake data.
 class FakeData(Faker):
 
   firstname = None
   lastname = None
-  gmail = None
-  email = None
-  new_email = None
+  gmail = None #used for logging into gmail
+  email = None #used for logging into site
+  new_email = None #used for new user creation
   password = None
-  path_to_test_doc = None
+  path_to_test_doc = None #used for file uploads
 
   def __init__(self):
     super(FakeData, self).__init__()
     
     self.firstname = self.first_name()
     self.lastname = self.last_name()
-    self.gmail = 'oars.tests@2u.com'
-    self.email = 'oars.tests+222@2u.com'
-    self.new_email = 'oars.tests+'+str(random.choice(range(100, 1000)))+'@2u.com'
-    self.password = 'Moodle1!'
+    
+    u = userNames.LoginInfo() #used for storing usernames/passwords
+
+    self.gmail = u.get_login_info('gmail')
+    self.email = u.get_login_info('email')
+    self.new_email = u.get_login_info('new_email')
+    self.password = u.get_login_info('password')
 
     #self.path_to_test_doc = os.path.abspath('test_doc.pdf')
     self.path_to_test_doc = os.path.abspath('./test_doc.pdf')

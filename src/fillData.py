@@ -56,13 +56,17 @@ class Filler(object):
             print 'clicking: '+element.get_attribute('id'), 'yes'
             element.click()
         #for radio buttons where a 'no' would expand a hidden node, the word 'not' is used in the ol class attribute
-        elif'not' in sub_tag.get_attribute('class'):
+        elif 'not' in sub_tag.get_attribute('class'):
           #since 'not' is in the class attribute field we want to find and click the 'no' radio button
           if 'no' in element.get_attribute('id'):
             print 'clicking: '+element.get_attribute('id'), 'no'
             element.click()
       else:
-        try:
+        if '.female' in element.get_attribute('id'):
+          element.click() #by default selects female radio button
+        elif '.yes' in element.get_attribute('id'):
+          element.click() #by default selects 'yes' radio button
+        '''try:
           #randomly choose an option for gender
           gender_inputs = fieldset.find_elements_by_xpath(".//input[contains(@id, 'gender')]")
           random_number = random.choice(range(0,2))
@@ -70,7 +74,7 @@ class Filler(object):
           gender_inputs[random_number].click()
           break
         except Exception, e:
-          pass
+          pass'''
 
   def _attach_a_file(self, element, fieldset, page):    
     element = self._check_before_upload(element, fieldset, page)
