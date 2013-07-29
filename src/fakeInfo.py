@@ -6,6 +6,7 @@ class FakeData(Faker):
 
   firstname = None
   lastname = None
+  gmail = None
   email = None
   new_email = None
   password = None
@@ -16,11 +17,13 @@ class FakeData(Faker):
     
     self.firstname = self.first_name()
     self.lastname = self.last_name()
-    self.email = 'oars.tests+527@2u.com'
+    self.gmail = 'oars.tests@2u.com'
+    self.email = 'oars.tests+222@2u.com'
     self.new_email = 'oars.tests+'+str(random.choice(range(100, 1000)))+'@2u.com'
     self.password = 'Moodle1!'
 
-    self.path_to_test_doc = os.path.abspath('test_doc.pdf')
+    #self.path_to_test_doc = os.path.abspath('test_doc.pdf')
+    self.path_to_test_doc = os.path.abspath('./test_doc.pdf')
     
   def _fake_date(self, date_format):
     year = random.choice(range(1950, 2000))

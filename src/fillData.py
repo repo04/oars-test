@@ -15,7 +15,7 @@ class Filler(object):
     self.fake_info = FakeData()
     self.program_url = url
 
-  def _fill_text(self, element, page=None):
+  def _fill_text_box(self, element, page=None):
     
     print element.tag_name, element.get_attribute('id'), "sending keys"
     if element.is_displayed()==True:
@@ -63,9 +63,9 @@ class Filler(object):
             element.click()
       else:
         try:
-          #randomly choose one of the three options for gender
+          #randomly choose an option for gender
           gender_inputs = fieldset.find_elements_by_xpath(".//input[contains(@id, 'gender')]")
-          random_number = random.choice(range(0,3))
+          random_number = random.choice(range(0,2))
           print gender_inputs[random_number].get_attribute('id')
           gender_inputs[random_number].click()
           break
@@ -80,8 +80,14 @@ class Filler(object):
     
     #path to 
     print 'path to file:', self.fake_info.path_to_test_doc
-
-    element.send_keys(self.fake_info.path_to_test_doc)
+    #gives file path to input element
+    try:
+      element.send_keys(self.fake_info.path_to_test_doc)
+    except Exception, e:
+      print 'upload failed'
+      print 'trying again'
+      element = fieldset.find_element_by_xpath(".//input[@type='file']")
+      element.send_keys(self.fake_info.path_to_test_doc)
     
     self._wait_for_upload_to_complete(element, fieldset)
     
@@ -116,7 +122,13 @@ class Filler(object):
     else:
       return element                
 
-  #inline section...[add more later]
+  def _fill_text_area(self, element):
+    print element.tag_name, element.get_attribute('id'), "sending keys"
+    if element.is_displayed()==True:
+      element.clear()
+      element.send_keys(self.fake_info.lorem())
+
+  #handles section tags that contain inline in the id
   def _inline_section(self, element, page):
     print 'adding'
     add_button = element.find_element_by_xpath(".//a[contains(@class, 'button action medium add')]")
@@ -155,7 +167,7 @@ class Filler(object):
       
       #checks to see if a text field is visible then sends keys.
       elif field.get_attribute('type')=='text' or field.get_attribute('type')=='email' and field.is_displayed()==True:
-        self._fill_text(field, page=page)
+        self._fill_text_box(field, page=page)
 
       #selects yes or no depending on whether button triggers a node to expand
       elif field.get_attribute('type')=='radio':
@@ -170,6 +182,9 @@ class Filler(object):
 
       elif field.get_attribute('type')=='checkbox':
         self._click_checkbox(field)
+
+      elif field.tag_name=='textarea':
+        self._fill_text_area(field)
         
       index += 1 
 
@@ -190,9 +205,9 @@ class Filler(object):
       #only evaluates elements on current page
       if tag.is_displayed()==True:
         if tag.tag_name=='fieldset':
-          #look for select tags and input tags where id is not the null string
+          #look for select, textarea and input tags where id is not the null string
           #also looks for input tags where type is 'file'
-          inputs = tag.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']|.//input[@type='file']|.//input[@type='checkbox']")
+          inputs = tag.find_elements_by_xpath(".//select[@id!='']|.//input[@id!='']|.//input[@type='file']|.//input[@type='checkbox']|.//textarea[@id!='']")
           #calls _sort_and_fill() method using input/select element and the fieldset tag of its ancestral node 
           self._sort_and_fill(inputs, tag, page)
         elif tag.tag_name=='section':

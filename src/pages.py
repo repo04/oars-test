@@ -50,8 +50,11 @@ class LandingPage(Page):
     print 'new user created: '+data.fake_info.new_email+'\n'
     print '\nWelcome to OARS!\n'
 
-    welcome_banner = self.driver.find_element_by_xpath("//a[@class='close']")
-    welcome_banner.click()
+    try:
+      welcome_banner = self.driver.find_element_by_xpath("//a[@class='close']")
+      welcome_banner.click()
+    except Exception, e:
+      pass
 
   def login(self, data):
     #try:
@@ -88,9 +91,6 @@ class PreviewPage(Page):
     submit_button.click()
 
   def submit_with_offline_payment(self):
-    print 'sleeping'
-    time.sleep(3)
-
     self.driver.switch_to_frame(1)
     offline_payment_button = self.driver.find_element_by_xpath("//input[contains(@id, 'offline')]")
     offline_payment_button.click()
@@ -122,7 +122,7 @@ class EmailPage(Page):
     password_field = self.driver.find_element_by_id('Passwd')
     sign_in_button = self.driver.find_element_by_xpath("//input[@type='submit']")
 
-    username_field.send_keys(data.fake_info.email)
+    username_field.send_keys(data.fake_info.gmail)
     password_field.send_keys(data.fake_info.password)
     sign_in_button.click()
 

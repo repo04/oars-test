@@ -12,7 +12,7 @@ class Page(object):
 
   def __init__(self, driver, name = None):
     self.driver = driver
-    self.wait = WebDriverWait(self.driver, 20)
+    self.wait = WebDriverWait(self.driver, 45)
     self.name = name
 
   
@@ -28,10 +28,12 @@ class Page(object):
     wait_element = self.wait.until(EC.element_to_be_clickable((By.ID, 'id_email')))
 
   def save_and_continue(self):
-    #save_and_continue_button = self.driver.find_element_by_xpath("//a[text()='Save & Continue']")
-    #save_and_continue_button = self.driver.find_element_by_partial_link_text("Save & Continue")
-    #save_and_continue_button.click()
-    pass
+    try:
+      #save_and_continue_button = self.driver.find_element_by_xpath("//a[text()='Save & Continue']")
+      save_and_continue_button = self.driver.find_element_by_link_text("Save & Continue")
+      save_and_continue_button.click()
+    except Exception, e:
+      pass
 
   def preview_application(self):
     time.sleep(3)
