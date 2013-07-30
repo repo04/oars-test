@@ -156,6 +156,8 @@ class Filler(object):
     print '**********'
     print 'saving'
 
+    time.sleep(2)
+
   def _sort_and_fill(self, inputs, fieldset=None, page=None):
     index = 0
 

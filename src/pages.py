@@ -67,7 +67,7 @@ class LandingPage(Page):
     password_field = self.driver.find_element_by_id('id_password')
     sign_in_button = self.driver.find_element_by_id('id_do_sign_in')
 
-    email_address_field.send_keys(data.fake_info.email)
+    email_address_field.send_keys(data.fake_info.new_email)
     password_field.send_keys(data.fake_info.password)
     sign_in_button.click()
 
@@ -81,10 +81,14 @@ class PreviewPage(Page):
     super(PreviewPage, self).__init__(driver, name)
 
   def continue_to_page(self):
-    time.sleep(2)
+    time.sleep(5)
     
-    continue_button = self.driver.find_element_by_xpath('/html/body/div[2]/nav/a[2]')
+    continue_button = self.driver.find_element_by_xpath('/html/body/div[2]/nav/a[2]') #/span
     continue_button.click()
+    #html.js body div#DOMWindow nav.preview a.button
+    '''self.driver.switch_to_frame(0)
+    continue_button = self.driver.find_element_by_link_text("//class[contains(@class, 'closeDOMWindow')]")
+    continue_button.click()'''
 
   def submit(self):
     submit_button = self.driver.find_element_by_partial_link_text("Submit")
@@ -101,8 +105,9 @@ class PreviewPage(Page):
 
     continue_button_2 = self.driver.find_element_by_partial_link_text("Continue")
     continue_button_2.click()
+    time.sleep(20)
 
-    self.driver.switch_to_default_content()
+    #self.driver.switch_to_default_content()
 
   def verify_application_submitted(self):
     print 'verifying that application has been submitted'

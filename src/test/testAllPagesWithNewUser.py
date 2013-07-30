@@ -39,4 +39,15 @@ def test(args):
   recommendations = application_uploads.navigate_to('Recommendations')
   #needs two recommendations for a complete application
   data.auto_fill(recommendations)
+  data.auto_fill(recommendations)
   recommendations.save_and_continue()
+
+  recommendations.save_and_signout()
+  landing_page.login(data)
+  
+  recommendations.navigate_to()
+  preview_page = landing_page.preview_application()
+  preview_page.continue_to_page()
+  data.auto_fill(preview_page)
+  preview_page.submit()
+  preview_page.submit_with_offline_payment()

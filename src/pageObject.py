@@ -51,20 +51,28 @@ class Page(object):
 
   #looks for and clicks page_name's corresponding link in the navbar; instantiates and returns a Page object.
   #if 'Email' is passed, then an EmailPage object is instantiated and returned instead.
-  def navigate_to(self, page_name):
-    if page_name=='Email':
-      from pages import EmailPage
-      email_page = EmailPage(self.driver, page_name)
-      return email_page
-    else:
-      link_to_next_page = self.driver.find_element_by_partial_link_text(page_name)
-      #link_to_next_page = self.driver.find_element_by_xpath("//a[text()='"+page_name+"']")
-      next_page = Page(self.driver, page_name)
+  def navigate_to(self, page_name=None):
+    if page_name==None:
+      link_to_page = self.driver.find_element_by_link_text(self.name)
 
       print '**********'
-      print 'navigating to', next_page.name
-      link_to_next_page.click()
-      return next_page
+      print 'navigating to', self.name
+      link_to_page.click()
+        
+    else:
+      if page_name=='Email':
+        from pages import EmailPage
+        email_page = EmailPage(self.driver, page_name)
+        return email_page
+      else:
+        link_to_next_page = self.driver.find_element_by_partial_link_text(page_name)
+        #link_to_next_page = self.driver.find_element_by_xpath("//a[text()='"+page_name+"']")
+        next_page = Page(self.driver, page_name)
+
+        print '**********'
+        print 'navigating to', next_page.name
+        link_to_next_page.click()
+        return next_page
 
   #short wait then driver switches to the last window opened
   def switch_to_newest_window(self):
