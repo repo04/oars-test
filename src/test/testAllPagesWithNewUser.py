@@ -44,8 +44,10 @@ def test(args):
 
   recommendations.save_and_signout()
   landing_page.login(data)
+
+  landing_page.is_complete(data, [personal_info, prof_exp, acad_background, application_uploads, recommendations])
   
-  recommendations.navigate_to()
+  #recommendations.navigate_to()
   preview_page = landing_page.preview_application()
   preview_page.continue_to_page()
   data.auto_fill(preview_page)

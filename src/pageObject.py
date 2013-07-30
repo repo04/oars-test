@@ -12,7 +12,7 @@ class Page(object):
 
   def __init__(self, driver, name = None):
     self.driver = driver
-    self.wait = WebDriverWait(self.driver, 45)
+    self.wait = WebDriverWait(self.driver, 25)
     self.name = name
 
   
@@ -22,18 +22,33 @@ class Page(object):
   
   def save_and_signout(self):
     sign_out_button = self.driver.find_element_by_id('id_do_sign_out')
+
+    print '**********'
+    print 'signing out'
     sign_out_button.click()
     alert = self.driver.switch_to_alert()
     alert.accept()
     wait_element = self.wait.until(EC.element_to_be_clickable((By.ID, 'id_email')))
 
   def save_and_continue(self):
+    #save_and_continue_button = self.driver.find_element_by_xpath("//a[text()='Save & Continue']")
     try:
-      #save_and_continue_button = self.driver.find_element_by_xpath("//a[text()='Save & Continue']")
       save_and_continue_button = self.driver.find_element_by_link_text("Save & Continue")
-      save_and_continue_button.click()
     except Exception, e:
       pass
+    '''for button in save_and_continue_buttons:
+      try:
+        if button.is_displayed()==True:
+          button.click()
+      except Exception, e:
+        pass'''
+
+  def is_complete(self, data, all_pages):
+    for page in all_pages:
+      page.navigate_to()
+      link_to_page = self.driver.find_element_by_link_text(page.name)
+      if 'error' in link_to_page.get_attribute('class'):
+        data.auto_fill(page)
 
   def preview_application(self):
     time.sleep(3)

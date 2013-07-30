@@ -69,6 +69,9 @@ class LandingPage(Page):
 
     email_address_field.send_keys(data.fake_info.new_email)
     password_field.send_keys(data.fake_info.password)
+    
+    print '**********'
+    print 'logging in'
     sign_in_button.click()
 
     wait_element = self.wait.until(EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'big button')]")))
@@ -81,8 +84,7 @@ class PreviewPage(Page):
     super(PreviewPage, self).__init__(driver, name)
 
   def continue_to_page(self):
-    time.sleep(5)
-    
+    wait_element = self.wait.until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[2]/nav/a[2]')))
     continue_button = self.driver.find_element_by_xpath('/html/body/div[2]/nav/a[2]') #/span
     continue_button.click()
     #html.js body div#DOMWindow nav.preview a.button
@@ -96,16 +98,24 @@ class PreviewPage(Page):
 
   def submit_with_offline_payment(self):
     self.driver.switch_to_frame(1)
+    wait_element = self.wait.until(EC.element_to_be_clickable((By.ID,'id_payment_method.offline')))
     offline_payment_button = self.driver.find_element_by_xpath("//input[contains(@id, 'offline')]")
     offline_payment_button.click()
+
+    wait_element = self.wait.until(EC.element_to_be_clickable((By.PARTIAL_LINK_TEXT,'Continue')))
     continue_button = self.driver.find_element_by_partial_link_text("Continue")
+    print '**********'
+    print 'clicking continue'
     continue_button.click()
 
-    time.sleep(1)
-
+    wait_element = self.wait.until(EC.element_to_be_clickable((By.PARTIAL_LINK_TEXT,'Continue')))
     continue_button_2 = self.driver.find_element_by_partial_link_text("Continue")
+    print '**********'
+    print 'clicking continue'
     continue_button_2.click()
-    time.sleep(20)
+
+
+    time.sleep(30)
 
     #self.driver.switch_to_default_content()
 

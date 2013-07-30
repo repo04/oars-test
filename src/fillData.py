@@ -197,7 +197,7 @@ class Filler(object):
   #takes in a page and fills in text boxes, clicks radio buttons, uploads files, and selects from combo boxes 
   def auto_fill(self, page):
     #temporary. wait for page to load.
-    time.sleep(3)
+    time.sleep(2)
 
     #this is a list
     #grabs anything with either a fieldset tag or section tag contiaining the word 'inline' in its id field
