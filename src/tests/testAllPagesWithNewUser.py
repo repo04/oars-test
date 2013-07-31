@@ -9,6 +9,7 @@ def test(args):
   data = args['data']
   
   landing_page = LandingPage(driver, 'Login Page', program_url)
+  data.create_random_username()
   
   #test
   landing_page.start_new_app(data)
@@ -42,8 +43,8 @@ def test(args):
   data.auto_fill(recommendations)
   recommendations.save_and_continue()
 
-  recommendations.save_and_signout()
-  landing_page.login(data)
+  '''recommendations.save_and_signout()
+  landing_page.login(data)'''
 
   landing_page.is_complete(data, [personal_info, prof_exp, acad_background, application_uploads, recommendations])
   
@@ -53,3 +54,4 @@ def test(args):
   data.auto_fill(preview_page)
   preview_page.submit()
   preview_page.submit_with_offline_payment()
+  #preview_page.verify_application_submitted()

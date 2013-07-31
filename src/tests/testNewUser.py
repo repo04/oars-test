@@ -9,6 +9,7 @@ def test(args):
   data = args['data']
   
   landing_page = LandingPage(driver, 'Login Page', program_url)
+  data.create_random_username()
 
   #test
   landing_page.start_new_app(data)

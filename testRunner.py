@@ -19,7 +19,7 @@ arg_map['url'] = args.url #the url for the program
 arg_map['driver'] = args.driver	#store webdriver name
 arg_map['data'] = Filler(args.url) #instantiate and store Filler; used for inputting data on forms
 
-sys.path.insert(0, './src/test/')
+sys.path.insert(0, './src/tests/')
 t = __import__(arg_map['test'])
 
 #refer to userNames.py to configure username/password
