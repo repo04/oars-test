@@ -1,4 +1,5 @@
 /selenium/*
 /src/*.pyc
-/src/test/*.pyc
+/src/tests/*.pyc
 /*.pyc
+/libpeerconnection.log

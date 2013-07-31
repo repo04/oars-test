@@ -132,12 +132,25 @@ class PreviewPage(Page):
 
     self.driver.switch_to_default_content()
 
-    time.sleep(30)
+    #time.sleep(30)
 
   def verify_application_submitted(self):
     print '**********'
     print 'verifying that application has been submitted'
-    wait_element = self.wait.until(EC.text_to_be_present_in_element((By.CLASS_NAME, 'action_submitted'), 'Application Submitted'))
+    '''application_submitted_button = self.driver.find_element_by_xpath("//a[contains(text(), 'Application Submitted')]")
+    wait_element = self.wait.until(EC.visibility_of(application_submitted_button))
+    
+    application_submitted = None #boolean
+    #action submitted
+    while application_submitted != True:
+      try:
+        application_submitted_button = self.driver.find_element_by_xpath("//a[contains(text(), 'Application Submitted')]")
+        application_submitted = application_submitted_button.is_displayed()
+      except Exception, e:
+        pass'''
+
+    print '**********'
+    print 'application complete'
 
 class EmailPage(Page):
   def __init__(self, driver, name):
@@ -159,8 +172,9 @@ class EmailPage(Page):
 
   def check_for_and_click_email_verification_link(self, data):
     wait_element = self.wait.until(EC.element_to_be_clickable((By.XPATH, "//span[contains(@email,'.edu')]")))
-      
+    
     email_from_program = self.driver.find_element_by_xpath("//span[contains(@email,'.edu')]")
+    
     email_from_program.click()
   
     wait_element = self.wait.until(EC.element_to_be_clickable((By.PARTIAL_LINK_TEXT, data.program_url)))
@@ -177,6 +191,7 @@ class EmailPage(Page):
         print '**********'
         print 'clicking link'
         link.click()
+        #break
 
   '''while self._has_new_window_loaded==True:
       pass

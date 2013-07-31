@@ -5,6 +5,9 @@ sys.path.insert(0, './src/')
 from fillData import Filler
 
 parser = argparse.ArgumentParser()
+
+#command line arguments
+#input order does not matter
 parser.add_argument("--test", "-T",    action="store", type=str, required=True)
 parser.add_argument("--driver", "-D",     action="store", type=str, required=True)
 parser.add_argument("--program", "-P", action="store", type=str, required=True)
@@ -20,7 +23,7 @@ arg_map['driver'] = args.driver	#store webdriver name
 arg_map['data'] = Filler(args.url) #instantiate and store Filler; used for inputting data on forms
 
 sys.path.insert(0, './src/tests/')
-t = __import__(arg_map['test'])
+t = __import__(arg_map['test']) #used to load test using command line argument
 
 #refer to userNames.py to configure username/password
 test = t.test(arg_map)	#start setup/test

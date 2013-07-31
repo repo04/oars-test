@@ -12,7 +12,7 @@ class Page(object):
 
   def __init__(self, driver, name = None):
     self.driver = driver
-    self.wait = WebDriverWait(self.driver, 25)
+    self.wait = WebDriverWait(self.driver, 20)
     self.name = name
 
   
