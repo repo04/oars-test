@@ -15,6 +15,9 @@ class Filler(object):
     self.fake_info = FakeData()
     self.program_url = url
 
+  def create_random_username(self):
+    self.fake_info.create_random_username()
+
   def _fill_text_box(self, element, page=None):
     
     print element.tag_name, element.get_attribute('id'), "sending keys"
@@ -126,7 +129,7 @@ class Filler(object):
     else:
       return element                
 
-  def _fill_text_area(self, element):
+  def _fill_text_area(self, element): #not tested yet
     print element.tag_name, element.get_attribute('id'), "sending keys"
     if element.is_displayed()==True:
       element.clear()

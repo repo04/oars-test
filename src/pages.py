@@ -1,12 +1,17 @@
 #!/usr/bin/env python
-import time
+import time, sys
 from pageObject import Page
+from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 class LandingPage(Page):
   def __init__(self, driver, name, url):
-    # initialize parent class
+    if driver=='Chrome':
+      driver = webdriver.Chrome('./src/resources/chromedriver')
+    else: #instantiate Firefox by default
+      driver = webdriver.Firefox()
+    #initialize parent class
     super(LandingPage, self).__init__(driver, name)
     self.driver.get(url)
 
@@ -21,7 +26,7 @@ class LandingPage(Page):
     
     first_name = data.fake_info.fill_valid_value(last_name_field)
     last_name = data.fake_info.fill_valid_value(first_name_field)
-    email_address = data.fake_info.new_email
+    email_address = data.fake_info.email
 
     email_address_field.send_keys(email_address)
     first_name_field.send_keys(first_name)
@@ -47,7 +52,7 @@ class LandingPage(Page):
     wait_element = self.wait.until(EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'big button')]")))
 
     print '**********'
-    print 'new user created: '+data.fake_info.new_email+'\n'
+    print 'new user created: '+data.fake_info.email+'\n'
     print '\nWelcome to OARS!\n'
 
     try:
@@ -67,7 +72,7 @@ class LandingPage(Page):
     password_field = self.driver.find_element_by_id('id_password')
     sign_in_button = self.driver.find_element_by_id('id_do_sign_in')
 
-    email_address_field.send_keys(data.fake_info.new_email)
+    email_address_field.send_keys(data.fake_info.email)
     password_field.send_keys(data.fake_info.password)
     
     print '**********'
@@ -84,17 +89,28 @@ class PreviewPage(Page):
     super(PreviewPage, self).__init__(driver, name)
 
   def continue_to_page(self):
-    wait_element = self.wait.until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[2]/nav/a[2]')))
-    continue_button = self.driver.find_element_by_xpath('/html/body/div[2]/nav/a[2]') #/span
-    continue_button.click()
+    try:
+      '''wait_element = self.wait.until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[2]/nav/a[2]')))
+      continue_button = self.driver.find_element_by_xpath('/html/body/div[2]/nav/a[2]') #/span'''
+      wait_element = self.wait.until(EC.element_to_be_clickable((By.LINK_TEXT,'Continue')))
+      continue_button = self.driver.find_element_by_link_text("Continue")
+      continue_button.click()
+    except Exception, e:
+      pass
+    print '**********'
+    print 'continuing to submission page'
+    
     #html.js body div#DOMWindow nav.preview a.button
     '''self.driver.switch_to_frame(0)
     continue_button = self.driver.find_element_by_link_text("//class[contains(@class, 'closeDOMWindow')]")
     continue_button.click()'''
 
   def submit(self):
-    submit_button = self.driver.find_element_by_partial_link_text("Submit")
-    submit_button.click()
+    try:
+      submit_button = self.driver.find_element_by_partial_link_text("Submit")
+      submit_button.click()
+    except Exception, e:
+      pass
 
   def submit_with_offline_payment(self):
     self.driver.switch_to_frame(1)
@@ -114,14 +130,14 @@ class PreviewPage(Page):
     print 'clicking continue'
     continue_button_2.click()
 
+    self.driver.switch_to_default_content()
 
     time.sleep(30)
 
-    #self.driver.switch_to_default_content()
-
   def verify_application_submitted(self):
+    print '**********'
     print 'verifying that application has been submitted'
-    wait_element = self.wait.until(EC.text_to_be_present_in_element((By.TAG_NAME, 'h4'), 'Your application has been submitted!'))
+    wait_element = self.wait.until(EC.text_to_be_present_in_element((By.CLASS_NAME, 'action_submitted'), 'Application Submitted'))
 
 class EmailPage(Page):
   def __init__(self, driver, name):

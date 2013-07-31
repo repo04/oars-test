@@ -1,16 +1,18 @@
 from faker import Faker
 import random, decimal, os, userNames
 
-#inherits from Faker. used to generate fake data.
+#inherits from Faker - used to generate fake data
+#inherits from LoginInfo - used to hold usernames/passwords
 class FakeData(Faker):
 
   firstname = None
   lastname = None
   gmail = None #used for logging into gmail
   email = None #used for logging into site
-  new_email = None #used for new user creation
+  #new_email = None #used for new user creation
   password = None
   path_to_test_doc = None #used for file uploads
+  login_info = None
 
   def __init__(self):
     super(FakeData, self).__init__()
@@ -18,16 +20,20 @@ class FakeData(Faker):
     self.firstname = self.first_name()
     self.lastname = self.last_name()
     
-    u = userNames.LoginInfo() #used for storing usernames/passwords
+    self.login_info = userNames.LoginInfo() #used for storing usernames/passwords
 
-    self.gmail = u.get_login_info('gmail')
-    self.email = u.get_login_info('email')
-    self.new_email = u.get_login_info('new_email')
-    self.password = u.get_login_info('password')
+    self.gmail = self.login_info.get_login_info('gmail') #method from userNames.py
+    self.email = self.login_info.get_login_info('email') #method from userNames.py
+    #self.new_email = u.get_login_info('new_email')
+    self.password = self.login_info.get_login_info('password') #method from userNames.py
 
     #self.path_to_test_doc = os.path.abspath('test_doc.pdf')
     self.path_to_test_doc = os.path.abspath('./test_doc.pdf')
     
+  def create_random_username(self):
+    self.login_info.random_username()
+    self.email = self.login_info.get_login_info('email')
+
   def _fake_date(self, date_format):
     year = random.choice(range(1950, 2000))
     month = random.choice(range(1, 12))

@@ -72,8 +72,10 @@ class Page(object):
 
       print '**********'
       print 'navigating to', self.name
-      link_to_page.click()
-        
+      try:
+       link_to_page.click()
+      except Exception, e:
+       pass
     else:
       if page_name=='Email':
         from pages import EmailPage
@@ -86,7 +88,10 @@ class Page(object):
 
         print '**********'
         print 'navigating to', next_page.name
-        link_to_next_page.click()
+        try:
+          link_to_next_page.click()
+        except Exception, e:
+          pass
         return next_page
 
   #short wait then driver switches to the last window opened
