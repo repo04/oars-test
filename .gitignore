@@ -3,3 +3,4 @@
 /src/tests/*.pyc
 /*.pyc
 /libpeerconnection.log
+/src/userNames.py

@@ -54,4 +54,4 @@ def test(args):
   data.auto_fill(preview_page)
   preview_page.submit()
   preview_page.submit_with_offline_payment()
-  #preview_page.verify_application_submitted()
+  preview_page.verify_application_submitted()

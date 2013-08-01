@@ -13,4 +13,5 @@ def test(args):
 
   #test
   personal_info = landing_page.navigate_to('Personal Information')
+
   data.auto_fill(personal_info)

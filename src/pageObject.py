@@ -1,21 +1,24 @@
 #!/usr/bin/env python
 import time
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+#from selenium.webdriver.common.by import By
+#from selenium.webdriver.support.ui import WebDriverWait
+#from selenium.webdriver.support import expected_conditions as EC
+from isPresent import IsPresent
 
 class Page(object):
 
   driver = None  
-  wait = None
+  #wait = None
   name = None
+  ip = None
+
 
   def __init__(self, driver, name = None):
     self.driver = driver
-    self.wait = WebDriverWait(self.driver, 20)
+    #self.wait = WebDriverWait(self.driver, 20)
     self.name = name
+    self.ip = IsPresent(driver)
 
-  
   def change_password(self):
     change_password_button = self.driver.find_element_by_class_name('action leave reset-password')
     change_password_button.click()
@@ -28,7 +31,8 @@ class Page(object):
     sign_out_button.click()
     alert = self.driver.switch_to_alert()
     alert.accept()
-    wait_element = self.wait.until(EC.element_to_be_clickable((By.ID, 'id_email')))
+    #wait_element = self.wait.until(EC.element_to_be_clickable((By.ID, 'id_email')))
+    wait_element = ip.is_element_by_clickable_by_id('id_email')
 
   def save_and_continue(self):
     #save_and_continue_button = self.driver.find_element_by_xpath("//a[text()='Save & Continue']")

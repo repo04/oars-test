@@ -1,9 +1,9 @@
 from fakeInfo import FakeData
 import random, time
-from selenium.webdriver.common.by import By
+#from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait, Select
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
+#from selenium.webdriver.support import expected_conditions as EC
 
 #Used to fill out forms
 class Filler(object):
@@ -28,9 +28,10 @@ class Filler(object):
         element.send_keys('Mar')
       
         element.send_keys(k.ARROW_DOWN)
-      
-        wait_element = page.wait.until(EC.element_to_be_clickable((By.XPATH, "//li[contains(@class, 'autocomplete')]")))
-      
+        
+        #wait_element = page.wait.until(EC.element_to_be_clickable((By.XPATH, "//li[contains(@class, 'autocomplete')]")))
+        wait_element = page.ip.is_element_clickable_by_xpath("//li[contains(@class, 'autocomplete')]")
+
         highlighted_element = page.driver.find_element_by_xpath("//li[contains(@class, 'autocomplete')]")
         highlighted_element.click()
       else:
