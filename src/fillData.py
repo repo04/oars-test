@@ -201,8 +201,8 @@ class Filler(object):
 
   #takes in a page and fills in text boxes, clicks radio buttons, uploads files, and selects from combo boxes 
   def auto_fill(self, page):
-    #temporary. wait for page to load.
-    time.sleep(2)
+    time.sleep(2) #temporary. wait for page to load. still searching for alternative.
+
     '''try:
       header = page.driver.find_element_by_xpath("//h3[contains(text(), '"+page.name+"')]")
       wait_element = page.ip.is_element_visible(header)

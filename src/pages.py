@@ -2,20 +2,18 @@
 import time, sys
 from pageObject import Page
 from selenium import webdriver
-#from selenium.webdriver.common.by import By
-#from selenium.webdriver.support import expected_conditions as EC
 
 class LandingPage(Page):
   def __init__(self, driver, name, url):
     if driver=='Chrome':
       driver = webdriver.Chrome('./src/resources/chromedriver')
-    else: #instantiate Firefox by default
+    else:
       driver = webdriver.Firefox()
     #initialize parent class
     super(LandingPage, self).__init__(driver, name)
     self.driver.get(url)
 
-  def start_new_app(self, data):  #to be relocated
+  def start_new_app(self, data):
     
     first_time_applying = self.driver.find_element_by_id('choose-start-app')    
     first_time_applying.click()
@@ -36,7 +34,6 @@ class LandingPage(Page):
     start_a_new_application.click()
 
   def set_password(self, data):
-    #wait_element = self.wait.until(EC.element_to_be_clickable((By.ID, 'in_password')))
     wait_element = self.ip.is_element_clickable_by_id('in_password')
 
     print '**********'
@@ -50,7 +47,6 @@ class LandingPage(Page):
     confirm_new_password_field.send_keys(data.fake_info.password)
     set_new_password_button.click()
 
-    #wait_element = self.wait.until(EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'big button')]")))
     wait_element = self.ip.is_element_clickable_by_xpath("//a[contains(@class, 'big button')]")
 
     print '**********'
@@ -64,11 +60,9 @@ class LandingPage(Page):
       pass
 
   def login(self, data):
-    #try:
     existing_application = self.driver.find_element_by_id('choose-sign-in')
     existing_application.click()
 
-    #wait_element = self.wait.until(EC.element_to_be_clickable((By.ID,'id_do_sign_in')))
     wait_element = self.ip.is_element_clickable_by_id('id_do_sign_in')
 
     email_address_field = self.driver.find_element_by_id('id_login')
@@ -82,13 +76,7 @@ class LandingPage(Page):
     print 'logging in'
     sign_in_button.click()
 
-    #wait_element = self.wait.until(EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'big button')]")))
     wait_element = self.ip.is_element_clickable_by_xpath("//a[contains(@class, 'big button')]")
-
-    #self.ip.is_text_present_by_xpath("//a[contains(@class, 'password')]", 'Change My Password')
-    # except Exception, e:
-    #  print "***Login failed***"
-     # raise e
 
 class PreviewPage(Page):
   def __init__(self, driver, name):
@@ -96,9 +84,6 @@ class PreviewPage(Page):
 
   def continue_to_page(self):
     try:
-      '''wait_element = self.wait.until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[2]/nav/a[2]')))
-      continue_button = self.driver.find_element_by_xpath('/html/body/div[2]/nav/a[2]') #/span'''
-      #wait_element = self.wait.until(EC.element_to_be_clickable((By.LINK_TEXT,'Continue')))
       wait_element = self.ip.is_element_clickable_by_link_text('Continue')
       continue_button = self.driver.find_element_by_link_text('Continue')
       continue_button.click()
@@ -106,11 +91,6 @@ class PreviewPage(Page):
       pass
     print '**********'
     print 'continuing to submission page'
-    
-    #html.js body div#DOMWindow nav.preview a.button
-    '''self.driver.switch_to_frame(0)
-    continue_button = self.driver.find_element_by_link_text("//class[contains(@class, 'closeDOMWindow')]")
-    continue_button.click()'''
 
   def submit(self):
     try:
@@ -121,19 +101,16 @@ class PreviewPage(Page):
 
   def submit_with_offline_payment(self):
     self.driver.switch_to_frame(1)
-    #wait_element = self.wait.until(EC.element_to_be_clickable((By.ID,'id_payment_method.offline')))
     wait_element = self.ip.is_element_clickable_by_id('id_payment_method.offline')
     offline_payment_button = self.driver.find_element_by_xpath("//input[contains(@id, 'offline')]")
     offline_payment_button.click()
 
-    #wait_element = self.wait.until(EC.element_to_be_clickable((By.PARTIAL_LINK_TEXT,'Continue')))
     wait_element = self.ip.is_element_clickable_by_partial_link_text("Continue")
     continue_button = self.driver.find_element_by_partial_link_text("Continue")
     print '**********'
     print 'clicking continue'
     continue_button.click()
 
-    #wait_element = self.wait.until(EC.element_to_be_clickable((By.PARTIAL_LINK_TEXT,'Continue')))
     wait_element = self.ip.is_element_clickable_by_partial_link_text("Continue")
     continue_button_2 = self.driver.find_element_by_partial_link_text("Continue")
     print '**********'
@@ -141,8 +118,6 @@ class PreviewPage(Page):
     continue_button_2.click()
 
     self.driver.switch_to_default_content()
-
-    #time.sleep(30)
 
   def verify_application_submitted(self):
     print '**********'
@@ -159,7 +134,6 @@ class EmailPage(Page):
     self.driver.get('https://gmail.com')
       
   def sign_in_to_gmail(self, data):
-    #wait_element = self.wait.until(EC.element_to_be_clickable((By.ID,'Email')))
     wait_element = self.ip.is_element_clickable_by_id('Email')
 
     username_field = self.driver.find_element_by_id('Email')
@@ -171,7 +145,6 @@ class EmailPage(Page):
     sign_in_button.click()
 
   def check_for_and_click_email_verification_link(self, data):
-    #wait_element = self.wait.until(EC.element_to_be_clickable((By.XPATH, "//span[contains(@email,'.edu')]")))
     wait_element = self.ip.is_element_clickable_by_xpath("//span[contains(@email,'.edu')]")
 
     email_from_program = self.driver.find_element_by_xpath("//span[contains(@email,'.edu')]")

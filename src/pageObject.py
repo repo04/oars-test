@@ -1,21 +1,16 @@
 #!/usr/bin/env python
 import time
-#from selenium.webdriver.common.by import By
-#from selenium.webdriver.support.ui import WebDriverWait
-#from selenium.webdriver.support import expected_conditions as EC
 from isPresent import IsPresent
 
 class Page(object):
 
   driver = None  
-  #wait = None
   name = None
   ip = None
 
 
   def __init__(self, driver, name = None):
     self.driver = driver
-    #self.wait = WebDriverWait(self.driver, 20)
     self.name = name
     self.ip = IsPresent(driver)
 
@@ -31,33 +26,25 @@ class Page(object):
     sign_out_button.click()
     alert = self.driver.switch_to_alert()
     alert.accept()
-    #wait_element = self.wait.until(EC.element_to_be_clickable((By.ID, 'id_email')))
     wait_element = ip.is_element_by_clickable_by_id('id_email')
 
   def save_and_continue(self):
-    #save_and_continue_button = self.driver.find_element_by_xpath("//a[text()='Save & Continue']")
     try:
       save_and_continue_button = self.driver.find_element_by_link_text("Save & Continue")
     except Exception, e:
       pass
-    '''for button in save_and_continue_buttons:
-      try:
-        if button.is_displayed()==True:
-          button.click()
-      except Exception, e:
-        pass'''
 
+  #navigates to given pages to ensure they are completed before attemopting to preview application
   def is_complete(self, data, all_pages):
     for page in all_pages:
       page.navigate_to()
       link_to_page = self.driver.find_element_by_link_text(page.name)
-      if 'error' in link_to_page.get_attribute('class'):
+      if 'error' in link_to_page.get_attribute('class'): #checks class of each section of the navbar to see if section is complete
         data.auto_fill(page)
 
   def preview_application(self):
-    #time.sleep(3)
-    self.ip.is_element_by_clickable_by_partial_link_text("Preview Your Application")
-    preview_application_button = self.driver.find_element_by_partial_link_text("Preview Your Application")
+    self.ip.is_element_clickable_by_link_text("Preview Your Application")
+    preview_application_button = self.driver.find_element_by_link_text("Preview Your Application")
     preview_application_button.click()
     #preview_application_button = self.driver.find_element_by_xpath("//a[text()='Preview Your Application']")
     from pages import PreviewPage
@@ -101,7 +88,7 @@ class Page(object):
 
   #short wait then driver switches to the last window opened
   def switch_to_newest_window(self):
-    time.sleep(3)
+    time.sleep(3) #wait for new page/tab to load. still searching for alternative to an explicit wait.
     latest_window = self.driver.window_handles[-1]
     self.driver.switch_to_window(latest_window)
     print '**********'
