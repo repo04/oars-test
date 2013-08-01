@@ -59,6 +59,12 @@ class IsPresent(object):
   def is_text_present_by_xpath(self, xpath, text):
     wait_element = self.wait.until(EC.text_to_be_present_in_element((By.XPATH, xpath), text))
 
+###########################################################################################
+  def is_element_visible(self, element):
+    wait_element = self.wait.until(EC.visibility_of(element))
+
+  def title_contains(self, text):
+    wait_element = self.wait.until(EC.title_contains(text))
 
     '''presence_of_element_located(locator)
 

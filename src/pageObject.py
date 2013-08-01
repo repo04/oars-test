@@ -55,7 +55,8 @@ class Page(object):
         data.auto_fill(page)
 
   def preview_application(self):
-    time.sleep(3)
+    #time.sleep(3)
+    self.ip.is_element_by_clickable_by_partial_link_text("Preview Your Application")
     preview_application_button = self.driver.find_element_by_partial_link_text("Preview Your Application")
     preview_application_button.click()
     #preview_application_button = self.driver.find_element_by_xpath("//a[text()='Preview Your Application']")
@@ -100,10 +101,9 @@ class Page(object):
 
   #short wait then driver switches to the last window opened
   def switch_to_newest_window(self):
-    #sleep to be replaced by self.has_new_window_loaded()
-    time.sleep(4)
-
+    time.sleep(3)
     latest_window = self.driver.window_handles[-1]
     self.driver.switch_to_window(latest_window)
     print '**********'
     print 'window switched to: '+self.driver.title
+        

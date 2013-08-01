@@ -160,7 +160,8 @@ class Filler(object):
     print '**********'
     print 'saving'
 
-    time.sleep(2)
+    wait_element = page.ip.is_element_visible(add_button)
+    #wait_element = page.ip.is_element_clickable_by_xpath(".//a[contains(@class, 'button medium action save')]")
 
   def _sort_and_fill(self, inputs, fieldset=None, page=None):
     index = 0
@@ -202,6 +203,12 @@ class Filler(object):
   def auto_fill(self, page):
     #temporary. wait for page to load.
     time.sleep(2)
+    '''try:
+      header = page.driver.find_element_by_xpath("//h3[contains(text(), '"+page.name+"')]")
+      wait_element = page.ip.is_element_visible(header)
+    except Exception, e:
+      page.navigate_to()
+      time.sleep(2)'''
 
     #this is a list
     #grabs anything with either a fieldset tag or section tag contiaining the word 'inline' in its id field

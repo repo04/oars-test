@@ -100,7 +100,7 @@ class PreviewPage(Page):
       continue_button = self.driver.find_element_by_xpath('/html/body/div[2]/nav/a[2]') #/span'''
       #wait_element = self.wait.until(EC.element_to_be_clickable((By.LINK_TEXT,'Continue')))
       wait_element = self.ip.is_element_clickable_by_link_text('Continue')
-      continue_button = self.driver.find_element_by_link_text("Continue")
+      continue_button = self.driver.find_element_by_link_text('Continue')
       continue_button.click()
     except Exception, e:
       pass
@@ -192,27 +192,9 @@ class EmailPage(Page):
         print '**********'
         print 'clicking link'
         link.click()
-        #break
+        break
 
-  '''while self._has_new_window_loaded==True:
-      pass
-
-  def _has_new_window_loaded(self):
-    for handle in self.driver.window_handles:
-      self.driver.switch_to_window(handle)
-      print self.driver.title
-      if '2U Mail' not in self.driver.title:
-        print '**********'
-        print 'switching windows to: '+self.driver.title
-        return True
-      return False
-
-    latest_window = self.driver.window_handles[-1]
-    self.driver.switch_to_window(latest_window)
-    print '**********'
-    print 'switching windows to: '+self.driver.title
-
-class PersonalInformation(page):
+'''class PersonalInformation(page):
   def __init__(self, driver, name):
     super(PersonalInformation, self).__init__(driver, name)
     
