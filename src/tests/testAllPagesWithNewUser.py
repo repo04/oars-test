@@ -21,7 +21,7 @@ def test(args):
   
   landing_page.set_password(data)
 
-    all_pages = landing_page.get_all_pages_from_navbar()
+  all_pages = landing_page.get_all_pages_from_navbar()
   
   for page in all_pages:
     page.navigate_to()
