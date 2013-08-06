@@ -12,7 +12,14 @@ def test(args):
   landing_page.login(data)
 
   #test
-  personal_info = landing_page.navigate_to('Personal Information')
+  all_pages = landing_page.get_all_pages_from_navbar()
+  
+  for page in all_pages:
+    page.navigate_to()
+    data.auto_fill(page)
+    page.save_and_continue()
+
+  '''personal_info = landing_page.navigate_to('Personal Information')
   data.auto_fill(personal_info)
   personal_info.save_and_continue()
 
@@ -34,9 +41,9 @@ def test(args):
   data.auto_fill(recommendations)
   recommendations.save_and_continue()
 
-  preview_page = recommendations.preview_application()
+  preview_page = landing_page.preview_application()
   preview_page.continue_to_page()
   data.auto_fill(preview_page)
   preview_page.submit()
   preview_page.submit_with_offline_payment()
-  preview_page.verify_application_submitted()
+  preview_page.verify_application_submitted()'''

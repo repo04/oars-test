@@ -78,6 +78,16 @@ class LandingPage(Page):
 
     wait_element = self.ip.is_element_clickable_by_xpath("//a[contains(@class, 'big button')]")
 
+  def get_all_pages_from_navbar(self):
+    all_pages = []
+
+    navbar = self.driver.find_element_by_class_name('sections')
+    link_to_all_pages = navbar.find_elements_by_tag_name('a')
+    for link in link_to_all_pages:
+      all_pages.append(Page(self.driver, link.text))
+    
+    return all_pages
+
 class PreviewPage(Page):
   def __init__(self, driver, name):
     super(PreviewPage, self).__init__(driver, name)
