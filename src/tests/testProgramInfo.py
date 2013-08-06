@@ -12,5 +12,5 @@ def test(args):
   landing_page.login(data)
 
   #test
-  prof_exp = landing_page.navigate_to('Professional')
-  data.auto_fill(prof_exp)
+  program_info = landing_page.navigate_to('Program Information')
+  data.auto_fill(program_info)

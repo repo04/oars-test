@@ -54,7 +54,7 @@ class LandingPage(Page):
     print '\nWelcome to OARS!\n'
 
     try:
-      welcome_banner = self.driver.find_element_by_xpath("//a[@class='close']")
+      welcome_banner = self.driver.find_element_by_class_name("close")
       welcome_banner.click()
     except Exception, e:
       pass

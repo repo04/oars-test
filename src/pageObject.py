@@ -38,7 +38,7 @@ class Page(object):
   def is_complete(self, data, all_pages):
     for page in all_pages:
       page.navigate_to()
-      link_to_page = self.driver.find_element_by_link_text(page.name)
+      link_to_page = self.driver.find_element_by_partial_link_text(page.name)
       if 'error' in link_to_page.get_attribute('class'): #checks class of each section of the navbar to see if section is complete
         data.auto_fill(page)
 
