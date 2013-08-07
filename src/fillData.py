@@ -19,7 +19,7 @@ class Filler(object):
   def auto_fill(self, page): #work in progress
     time.sleep(3)
     print '***START***'
-    all_sections = page.driver.find_elements_by_xpath("//section[contains(@id, 'section')]")
+    all_sections = page.driver.find_elements_by_xpath("//section[contains(@id, 'section')]|section[contains(@class, 'preview')]")
     for section in all_sections:
       if section.is_displayed()==True:
         print section.get_attribute('id')
@@ -41,10 +41,11 @@ class Filler(object):
   def _to_fieldsets(self, page, form):
     fieldsets = form.find_elements_by_tag_name("fieldset")
     for fieldset_tag in fieldsets:
-      all_data_fields = fieldset_tag.find_elements_by_xpath(".//select|.//input|.//textarea")
-      for data_field in all_data_fields:
-        if data_field.is_displayed()==True or 'location' in data_field.get_attribute('id'):
-          self._fill(data_field, fieldset_tag, page)
+      if 'practice_law' not in fieldset_tag.get_attribute('class'):
+        all_data_fields = fieldset_tag.find_elements_by_xpath(".//select|.//input|.//textarea")
+        for data_field in all_data_fields:
+          if data_field.is_displayed()==True or 'location' in data_field.get_attribute('id'):
+            self._fill(data_field, fieldset_tag, page)
 
   def _to_all_data_fields(self, page, form):
     all_data_fields = form.find_elements_by_xpath(".//input") #used specifically an alternate way to upload files
@@ -97,7 +98,10 @@ class Filler(object):
       #choose to expand node or else pick yes by default
       try:
         ol_tag = fieldset_tag.find_element_by_tag_name('ol')
-        if 'if' in ol_tag.get_attribute('class') or 'location' in ol_tag.get_attribute('class'):
+        if 'not_applicable' in data_field_id:
+          print 'clicking: ', data_field_id
+          data_field.click()
+        elif 'if' in ol_tag.get_attribute('class') or 'location' in ol_tag.get_attribute('class'):
           if 'yes' in data_field_id:
             print 'clicking: ', data_field_id
             data_field.click()
@@ -191,10 +195,10 @@ class Filler(object):
 
   def _click_checkbox(self, data_field):
     checkbox = data_field
-    if 'state' not in checkbox.get_attribute('name'):
-      if checkbox.is_selected()==False:
-        print 'checkbox', checkbox.get_attribute('value')
-        checkbox.click()
+    #if 'state' not in checkbox.get_attribute('name'):
+    if checkbox.is_selected()==False:
+      print 'checkbox', checkbox.get_attribute('value')
+      checkbox.click()
 
   def _wait_for_upload_to_complete(self, data_field, div_tag):
     button_name = ''

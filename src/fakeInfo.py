@@ -94,7 +94,7 @@ class FakeData(Faker):
     
     if 'signature' in element_id:
       if 'date' in element_id:
-        return self._fake_date(element.get_attribute('class'))
+        return self._fake_date(element)
       else:
         return self._fake_name(element.get_attribute('id'))
     elif 'employees' in element_id or 'salary' in element_id or 'bonus' in element_id or 'commission' in element_id:
@@ -127,7 +127,10 @@ class FakeData(Faker):
     elif 'phone' in element_id:
       return self._fake_phone(element.get_attribute('id'))
     elif 'security' in element_id or 'ssn' in element_id:
-      return '123-45-6789'
+      if 'format' in element.find_element_by_xpath("following-sibling::small[position()=1]").text:
+        return '123456789'
+      else:
+        return '123-45-6789'
     elif 'university' in element_id:
       return self.city()+' University'
     elif 'language' in element_id:
