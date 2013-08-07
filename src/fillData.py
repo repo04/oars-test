@@ -50,15 +50,25 @@ class Filler(object):
     all_data_fields = form.find_elements_by_xpath(".//input") #used specifically an alternate way to upload files
     for data_field in all_data_fields:
       if data_field.get_attribute('type')=='file':
-        fieldset_tag = data_field.find_element_by_xpath("ancestor::fieldset")
-        self._fill(data_field, fieldset_tag, page)
+        try:
+          tags = data_field.find_elements_by_xpath("ancestor::div[contains(@class, 'supload') and not(contains(@class, 'complete') and not(contains(@class, 'mask'))]")
+          for div_tag in tags:
+            if div_tag.is_displayed()==True:
+              self._fill(data_field, div_tag, page)
+              break
+        except Exception, e:
+          tags = data_field.find_elements_by_xpath("ancestor::div[contains(@class, 'supload') and not(contains(@class, 'mask'))]")
+          for div_tag in tags:
+            if div_tag.is_displayed()==True:
+              self._fill(data_field, div_tag, page)
+              break
 
-  def _fill(self, data_field, fieldset_tag, page):
+  def _fill(self, data_field, tag, page):
       #handles state field in a special manner because the state field switches from a text box
       #to a combo box if the US is selected as the country
     if 'location' in data_field.get_attribute('id'):
       #refinds the state field because it changes from a text box to a combo box depending on the country selected
-      state_field = fieldset_tag.find_element_by_xpath(".//select[contains(@id, 'state')]")
+      state_field = tag.find_element_by_xpath(".//select[contains(@id, 'state')]")
       self._select_combo(state_field, 1)
     #checks to see if a text field is visible then sends keys.
     elif data_field.get_attribute('type')=='text' or data_field.get_attribute('type')=='email': #and field.is_displayed()==True:
@@ -66,14 +76,14 @@ class Filler(object):
 
       #selects yes or no depending on whether button triggers a node to expand
     elif data_field.get_attribute('type')=='radio':
-      self._click_radio(data_field, fieldset_tag)
+      self._click_radio(data_field, tag) #tag ==> fieldset
         
       #selects the first option in combo boxes
     elif data_field.tag_name=='select':
       self._select_combo(data_field, 1)
 
     elif data_field.get_attribute('type')=='file':
-      self._attach_a_file(data_field, fieldset_tag, page)
+      self._attach_a_file(data_field, tag, page) #tag ==> div
 
     elif data_field.get_attribute('type')=='checkbox':
       self._click_checkbox(data_field)
@@ -133,7 +143,10 @@ class Filler(object):
       if 'autocomplete' in data_field.get_attribute('class'):
         k = Keys()
         #temp value: 'Ma' is temporarily being used because it is triggering the autocomplete dropdown for the three autocomplete textboxes
-        data_field.send_keys('Mar')
+        if 'degree' in data_field.get_attribute('id'):
+          data_field.send_keys('Ma')
+        else:
+          data_field.send_keys('Mar')
       
         data_field.send_keys(k.ARROW_DOWN)
         
@@ -154,47 +167,51 @@ class Filler(object):
     select = Select(data_field)
     select.select_by_index(index)
 
-  def _attach_a_file(self, data_field, fieldset_tag, page):
-    '''if fieldset_tag==None:
-      pass'''
-
-    data_field = self._check_before_upload(data_field, fieldset_tag, page)
+  def _attach_a_file(self, data_field, div_tag, page):
+    data_field = self._check_before_upload(data_field, div_tag, page)
 
     print '**********'
     print 'Attaching file:', 'test_doc'
     
     #path to 
     print 'path to file:', self.fake_info.path_to_test_doc
+    print div_tag.get_attribute('class')
     #gives file path to input element
     try:
       data_field.send_keys(self.fake_info.path_to_test_doc)
     except Exception, e:
-      print 'upload failed'
-      print 'trying again'
-      data_field = fieldset_tag.find_element_by_xpath(".//input[@type='file']")
+      #print 'upload failed'
+      #print 'trying again'
+      data_field = div_tag.find_element_by_xpath(".//input[@type='file']")
       data_field.send_keys(self.fake_info.path_to_test_doc)
     
-    self._wait_for_upload_to_complete(data_field, fieldset_tag)
+    self._wait_for_upload_to_complete(data_field, div_tag)
     
     print 'Upload Complete'
 
   def _click_checkbox(self, data_field):
     checkbox = data_field
-    if checkbox.is_selected()==False:
-      print 'checkbox', checkbox.get_attribute('value')
-      checkbox.click()
+    if 'state' not in checkbox.get_attribute('name'):
+      if checkbox.is_selected()==False:
+        print 'checkbox', checkbox.get_attribute('value')
+        checkbox.click()
 
-  def _wait_for_upload_to_complete(self, data_field, fieldset_tag):
+  def _wait_for_upload_to_complete(self, data_field, div_tag):
     button_name = ''
     while 'test_doc' not in button_name:
       try:
-        button_name = fieldset_tag.find_element_by_xpath(".//a[@class='button']").text
+        button_name = div_tag.find_element_by_xpath(".//a[@class='button']").text
       except Exception, e:
         pass
 
-  def _check_before_upload(self, data_field, fieldset_tag, page):
-    upload_button = fieldset_tag.find_element_by_xpath(".//a[@class='button']")
-    upload_button_text = upload_button.text
+  def _check_before_upload(self, data_field, div_tag, page):
+    if 'mask' in div_tag.get_attribute('class'):
+      upload_button = div_tag.find_element_by_xpath("following-sibling::a[position()=1 and @class='button']")
+      upload_button_text = upload_button.text
+    else:
+      upload_button = div_tag.find_element_by_xpath(".//a[@class='button']")
+      upload_button_text = upload_button.text
+    
     if 'test_doc' in upload_button_text:
       delete_button = upload_button.find_element_by_xpath(".//span[contains(@class, 'delete')]")
       delete_button.click()
@@ -202,7 +219,7 @@ class Filler(object):
       alert.accept()
       print '**********'
       print 'previous upload deleted'
-      element_after_file_deletion = fieldset_tag.find_element_by_xpath(".//input[@type='file']")
+      element_after_file_deletion = div_tag.find_element_by_xpath(".//input[@type='file']")
       return element_after_file_deletion
     else:
       return data_field                
