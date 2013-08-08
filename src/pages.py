@@ -9,8 +9,9 @@ class LandingPage(Page):
       driver = webdriver.Chrome('./src/resources/chromedriver')
     else:
       driver = webdriver.Firefox()
-    #initialize parent class
-    super(LandingPage, self).__init__(driver, name)
+      driver.maximize_window() # does not work with chrome
+    
+    super(LandingPage, self).__init__(driver, name) #initialize parent class
     self.driver.get(url)
 
   def start_new_app(self, data):
@@ -109,30 +110,36 @@ class PreviewPage(Page):
     except Exception, e:
       pass
 
-  def submit_with_offline_payment(self):
-    self.driver.switch_to_frame(1)
-    wait_element = self.ip.is_element_clickable_by_id('id_payment_method.offline')
-    offline_payment_button = self.driver.find_element_by_xpath("//input[contains(@id, 'offline')]")
-    offline_payment_button.click()
-
-    wait_element = self.ip.is_element_clickable_by_partial_link_text("Continue")
-    continue_button = self.driver.find_element_by_partial_link_text("Continue")
-    print '**********'
-    print 'clicking continue'
-    continue_button.click()
-
-    wait_element = self.ip.is_element_clickable_by_partial_link_text("Continue")
-    continue_button_2 = self.driver.find_element_by_partial_link_text("Continue")
-    print '**********'
-    print 'clicking continue'
-    continue_button_2.click()
-
-    self.driver.switch_to_default_content()
+  def confirm_submit(self):
+    try:
+      self.driver.switch_to_frame(1)
+      try:
+        offline_payment_button = self.driver.find_element_by_xpath("//input[contains(@id, 'offline')]")
+        offline_payment_button.click()
+      except Exception, e:
+        pass
+      try:
+        continue_button = self.driver.find_element_by_partial_link_text("Continue")
+        print '**********'
+        print 'clicking continue'
+        continue_button.click()
+      except Exception, e:
+        pass
+      try:
+        continue_button_2 = self.driver.find_element_by_partial_link_text("Continue")
+        print '**********'
+        print 'clicking continue'
+        continue_button_2.click()
+      except Exception, e:
+        pass 
+      self.driver.switch_to_default_content()
+    except Exception, e:
+      pass
 
   def verify_application_submitted(self):
     print '**********'
     print 'verifying that application has been submitted'
-    wait_element = self.ip.is_text_present_by_xpath("//a[contains(text(), 'Application Submitted')]", 'Application Submitted')
+    wait_element = self.ip.is_text_present_by_xpath("//a[contains(text(), 'Submitted')]", 'Application Submitted')
     print '**********'
     print 'application complete'
 

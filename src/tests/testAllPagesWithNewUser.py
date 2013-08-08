@@ -34,8 +34,11 @@ def test(args):
   data.auto_fill(recommendations)
   recommendations.save_and_continue()
 
+  landing_page.is_complete(data, all_pages)
+
   preview_page = landing_page.preview_application()
   preview_page.continue_to_page()
   data.auto_fill(preview_page)
   preview_page.submit()
-  #preview_page.submit_with_offline_payment()
+  preview_page.confirm_submit()
+  preview_page.verify_application_submitted()

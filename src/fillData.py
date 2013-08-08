@@ -19,7 +19,7 @@ class Filler(object):
   def auto_fill(self, page): #work in progress
     time.sleep(3)
     print '***START***'
-    all_sections = page.driver.find_elements_by_xpath("//section[contains(@id, 'section')]|section[contains(@class, 'preview')]")
+    all_sections = page.driver.find_elements_by_xpath("//section[contains(@id, 'section')]|//section[@class='application preview']")
     for section in all_sections:
       if section.is_displayed()==True:
         print section.get_attribute('id')
@@ -36,6 +36,13 @@ class Filler(object):
             inline_section = tag
             self._inline_section(page, inline_section)
         break
+      elif section.get_attribute('class')=='application preview':
+        print section.get_attribute('class')
+        form_tags = section.find_elements_by_tag_name('form')
+        for form in form_tags:
+          self._to_fieldsets(page, form)
+        break
+    
     print '***END***'
 
   def _to_fieldsets(self, page, form):
@@ -101,6 +108,9 @@ class Filler(object):
         if 'not_applicable' in data_field_id:
           print 'clicking: ', data_field_id
           data_field.click()
+        ########
+        #place in separate method
+        #
         elif 'if' in ol_tag.get_attribute('class') or 'location' in ol_tag.get_attribute('class'):
           if 'yes' in data_field_id:
             print 'clicking: ', data_field_id
@@ -189,6 +199,7 @@ class Filler(object):
       data_field = div_tag.find_element_by_xpath(".//input[@type='file']")
       data_field.send_keys(self.fake_info.path_to_test_doc)
     
+    #wait_element = page.ip.is_text_present_by_xpath(".//a[@class='button']", 'test_doc')
     self._wait_for_upload_to_complete(data_field, div_tag)
     
     print 'Upload Complete'
@@ -202,11 +213,19 @@ class Filler(object):
 
   def _wait_for_upload_to_complete(self, data_field, div_tag):
     button_name = ''
+    timeout = time.time() + 5 #set the wait time for file to upload
+    
     while 'test_doc' not in button_name:
       try:
+        time.sleep(.5)
         button_name = div_tag.find_element_by_xpath(".//a[@class='button']").text
+        if 'test_doc' in button_name:
+          break
+        if time.time() > timeout:
+          raise Exception
       except Exception, e:
-        pass
+        print 'file upload failed'
+        raise e
 
   def _check_before_upload(self, data_field, div_tag, page):
     if 'mask' in div_tag.get_attribute('class'):
@@ -246,9 +265,13 @@ class Filler(object):
     add_button.click()
    
     tr_tag = inline_section.find_element_by_class_name("editing")
-    new_form = tr_tag.find_element_by_tag_name('form')
+    new_forms = tr_tag.find_elements_by_tag_name('form')
 
-    self._to_fieldsets(page, new_form)
+    for form in new_forms:
+      if 'form' in form.get_attribute('id'):
+        self._to_fieldsets(page, form)
+      else:
+        self._to_all_data_fields(page, form) #used as alternate way of uploading files
 
     #saves info after filling in section
     save_button = inline_section.find_element_by_partial_link_text("Save")
