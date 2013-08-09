@@ -110,7 +110,7 @@ class PreviewPage(Page):
     except Exception, e:
       pass
 
-  def confirm_submit(self):
+  def confirm_submit(self, data):
     try:
       self.driver.switch_to_frame(1)
       try:
@@ -126,17 +126,26 @@ class PreviewPage(Page):
       except Exception, e:
         pass
       try:
+        data.auto_fill_iframe(self)
+      except Exception, e:
+        pass
+      try:
         continue_button_2 = self.driver.find_element_by_partial_link_text("Continue")
         print '**********'
         print 'clicking continue'
         continue_button_2.click()
       except Exception, e:
-        pass 
+        submit_button = self.driver.find_element_by_partial_link_text("Submit")
+        print '**********'
+        print 'submitting'
+        submit_button.click()
+
       self.driver.switch_to_default_content()
+
     except Exception, e:
       pass
 
-  def verify_application_submitted(self):
+  def verify_application_submitted(self): #needs work
     print '**********'
     print 'verifying that application has been submitted'
     wait_element = self.ip.is_text_present_by_xpath("//a[contains(text(), 'Submitted')]", 'Application Submitted')

@@ -45,6 +45,14 @@ class Filler(object):
     
     print '***END***'
 
+  def auto_fill_iframe(self, page):
+    time.sleep(3)
+    print '***START***'
+    payment_form = page.driver.find_element_by_tag_name('form')
+    self._to_fieldsets(page, payment_form)
+
+    print '***END***'
+
   def _to_fieldsets(self, page, form):
     fieldsets = form.find_elements_by_tag_name("fieldset")
     for fieldset_tag in fieldsets:
@@ -170,6 +178,11 @@ class Filler(object):
           highlighted_element.click()
         except Exception, e:
           pass
+      elif data_field.get_attribute('autocomplete')=='off':
+        k = Keys()
+        
+        data_field.send_keys('Afghanistan')
+        data_field.send_keys(k.ENTER)
       else:
         data_field.clear()
         info = self.fake_info.fill_valid_value(data_field)

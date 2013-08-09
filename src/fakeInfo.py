@@ -112,9 +112,9 @@ class FakeData(Faker):
       return random.choice(range(0, 20))
     elif '.address' in element_id:
       return self._fake_address(element_id)
-    elif 'city' in element_id:
+    elif 'city' in element_id or 'state' in element_id:
       return self.city()
-    elif 'postal' in element_id:
+    elif 'postal' in element_id or 'zip' in element_id:
       return self.zip_code()
     elif 'date' in element_id or 'date' in element_class:
       return self._fake_date(element)
@@ -142,5 +142,11 @@ class FakeData(Faker):
         return random.choice(range(400,600))
     elif 'gpa' in element_id:
       return str(decimal.Decimal(random.randrange(41))/decimal.Decimal(10))
+    elif 'account_number' in element_id: #fake payment info
+      return 4111111111111111
+    elif 'expires' in element_id: #fake payment info
+      return '12/2020'
+    elif 'cvv' in element_id:
+      return 123
     else:
       return 'giggity'
