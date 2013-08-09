@@ -16,12 +16,15 @@ $ sudo easy_install selenium
 $ sudo easy_install faker
 ```
 
+3. Ensure the chromedriver server is installed in ./oars-tests/src/resources. If not then it can be downloaded from https://code.google.com/p/chromedriver/downloads/list.
+
+
 ## TestRunner Commands
 
 | --set Parameters   | Alternate  | Required  | Default   | Description                      |
 | -----------------  | ---------  | --------- | --------- | -------------------------------- |
 | `test`             | -T         | yes       | None      | Specifies which test to execute  |
-| `program`          | -P         | yes       | None      | Specifies which program to run   |
+| `driver`           | -D         | yes       | None      | Specifies which browser to run   |
 | `url`              | -U         | yes       | None      | The URL to OARS in test          | 
 
 #### Example
