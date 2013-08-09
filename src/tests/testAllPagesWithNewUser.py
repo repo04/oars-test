@@ -40,5 +40,5 @@ def test(args):
   preview_page.continue_to_page()
   data.auto_fill(preview_page)
   preview_page.submit()
-  preview_page.confirm_submit()
+  preview_page.confirm_submit(data)
   preview_page.verify_application_submitted()
