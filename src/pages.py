@@ -5,9 +5,9 @@ from selenium import webdriver
 
 class LandingPage(Page):
   def __init__(self, driver, name, url):
-    if driver=='Chrome':
+    if driver.lower()=='chrome':
       driver = webdriver.Chrome('./src/resources/chromedriver')
-    else:
+    elif driver.lower()=='firefox':
       driver = webdriver.Firefox()
       driver.maximize_window() # does not work with chrome
     
