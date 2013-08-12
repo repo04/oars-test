@@ -27,8 +27,13 @@ $ sudo easy_install faker
 | `driver`           | -D         | yes       | None      | Specifies which browser to run   |
 | `url`              | -U         | yes       | None      | The URL to OARS in test          | 
 
-#### Example
-Navigate to root:
+#### Example (Navigate to root directory)
 
-    $ python testRunner.py -T 'testPersonalInfo' -P 'au-mir' -U https://au-mir-oars-sb01-qa.2u.com/
+Tests the Personal Information page of an application
 
+    $ python testRunner.py -T 'testPersonalInfo' -U https://au-mir-oars-sb05-qa.2u.com/ -D 'Chrome'
+
+#### Another example:
+Completes and submits an application using a randomly generated user
+
+	$ python testRunner.py -T 'testAllPagesWithNewUser' -U https://au-mir-oars-sb05-qa.2u.com/ -D 'Chrome'
