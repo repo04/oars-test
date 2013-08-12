@@ -2,7 +2,6 @@ from faker import Faker
 import random, decimal, os, userNames, string
 
 #inherits from Faker - used to generate fake data
-#inherits from LoginInfo - used to hold usernames/passwords
 class FakeData(Faker):
 
   firstname = None
