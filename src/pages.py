@@ -78,7 +78,7 @@ class LandingPage(Page):
     sign_in_button.click()
 
     wait_element = self.ip.is_element_clickable_by_xpath("//a[contains(@class, 'big button')]")
-
+    
   def get_all_pages_from_navbar(self):
     all_pages = []
 
@@ -148,7 +148,12 @@ class PreviewPage(Page):
   def verify_application_submitted(self): #needs work
     print '**********'
     print 'verifying that application has been submitted'
-    wait_element = self.ip.is_text_present_by_xpath("//a[contains(text(), 'Submitted')]", 'Application Submitted')
+    
+    try: #checks for 'Application Complete'. if check fails, then it checks again but for upper case string
+      wait_element = self.ip.is_text_present_by_xpath("//a[contains(@class, 'submitted')]", 'Application Submitted')
+    except Exception, e:
+      wait_element = self.ip.is_text_present_by_xpath("//a[contains(@class, 'submitted')]", 'Application Submitted'.upper())
+    
     print '**********'
     print 'application complete'
 

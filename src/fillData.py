@@ -209,9 +209,12 @@ class Filler(object):
         data_field.send_keys('Afghanistan') #did not choose U.S. because extra 'State' box changes
         data_field.send_keys(k.ENTER)
       else:
-        data_field.clear()
-        info = self.fake_info.fill_valid_value(data_field)
-        data_field.send_keys(info)
+        try:
+          data_field.clear()
+          info = self.fake_info.fill_valid_value(data_field)
+          data_field.send_keys(info)
+        except Exception, e:
+          pass
   
   #selects an option from a combo box
   def _select_combo(self, data_field, index):
