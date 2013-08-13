@@ -27,7 +27,7 @@ class FakeData(Faker):
     self.password = self.login_info.get_login_info('password') #method from userNames.py
 
     #self.path_to_test_doc = os.path.abspath('test_doc.pdf')
-    self.path_to_test_doc = os.path.abspath('./test_doc.pdf')
+    self.path_to_test_doc = os.path.abspath('./src/resources/test_doc.pdf')
     
   def create_random_username(self):
     self.login_info.random_username()
