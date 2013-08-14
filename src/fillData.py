@@ -195,7 +195,7 @@ class Filler(object):
         k = Keys() #used for sending special keys
 
         if 'degree' in data_field.get_attribute('id'):
-          data_field.send_keys('Math')
+          data_field.send_keys('Mat')
         else:
           data_field.send_keys('Mar')
       
@@ -206,7 +206,14 @@ class Filler(object):
           highlighted_element = page.driver.find_element_by_xpath("//li[contains(@class, 'autocomplete')]")
           highlighted_element.click() #clicks option
         except Exception, e:
-          pass
+          #if 'Math' doesnt trigger dropdown then 'Ma' is tried
+          data_field.clear()
+          data_field.send_keys('Ma')
+          data_field.send_keys(k.ARROW_DOWN) #goes down to first drowdown option
+          wait_element = page.ip.is_element_clickable_by_xpath("//li[contains(@class, 'autocomplete')]") #waits for option to load
+          highlighted_element = page.driver.find_element_by_xpath("//li[contains(@class, 'autocomplete')]")
+          highlighted_element.click() #clicks option
+
       elif data_field.get_attribute('autocomplete')=='off': #special dropdown box on payment screen
         k = Keys()
         

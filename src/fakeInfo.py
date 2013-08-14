@@ -1,5 +1,6 @@
 from faker import Faker
-import random, decimal, os, userNames, string
+import random, os, userNames, string
+from decimal import *
 
 #inherits from Faker - used to generate fake data
 class FakeData(Faker):
@@ -143,7 +144,9 @@ class FakeData(Faker):
       else:
         return random.choice(range(400,600))
     elif 'gpa' in element_id:
-      return str(decimal.Decimal(random.randrange(41))/decimal.Decimal(10))
+      getcontext().prec = 1
+      random_gpa = decimal.Decimal(random.randrange(41))/decimal.Decimal(11)
+      return random_gpa
     elif 'account_number' in element_id: #fake payment info
       return 4111111111111111
     elif 'expires' in element_id: #fake payment info
