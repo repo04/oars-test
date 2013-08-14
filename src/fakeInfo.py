@@ -85,7 +85,10 @@ class FakeData(Faker):
       upper_bound = int(float(score_range[1]))
       return random.choice(range(lower_bound, upper_bound))
     except Exception, e:
-      return random.choice(range(0, 30))
+      if 'percent' in element.get_attribute('id'):
+        return random.choice(range(10, 90))
+      else:
+        return random.choice(range(300, 600))
 
   def fill_valid_value(self, element):
     element_id = element.get_attribute('id')

@@ -161,6 +161,10 @@ class Filler(object):
         print 'clicking: ', data_field_id
         data_field.click()
 
+    elif 'yes' in data_field_id:
+      print 'clicking: ', data_field_id
+      data_field.click()
+
   def _miscellaneous_radio_button(self, data_field): #handles all of the other radio buttons
     data_field_id = data_field.get_attribute('id')
       
@@ -174,7 +178,7 @@ class Filler(object):
     elif 'marital_status' in data_field_id:
       if 'single' in data_field_id:
         data_field.click()
-    elif 'mailing_address' in data_field_id:
+    elif 'address' in data_field_id:
       if 'primary' in data_field_id:
         data_field.click()
 
@@ -191,7 +195,7 @@ class Filler(object):
         k = Keys() #used for sending special keys
 
         if 'degree' in data_field.get_attribute('id'):
-          data_field.send_keys('Ma')
+          data_field.send_keys('Math')
         else:
           data_field.send_keys('Mar')
       
