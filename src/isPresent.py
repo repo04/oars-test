@@ -7,7 +7,7 @@ class IsPresent(object):
   wait = None
 
   def __init__(self, driver):
-    self.wait = WebDriverWait(driver, 10)
+    self.wait = WebDriverWait(driver, 15)
 
 ###########################################################################################
   def is_element_clickable_by_class_name(self, class_name):
