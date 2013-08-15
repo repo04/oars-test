@@ -9,7 +9,7 @@ class Page(object):
   ip = None
 
 
-  def __init__(self, driver, name = None):
+  def __init__(self, driver, name=None):
     self.driver = driver
     self.name = name
     self.ip = IsPresent(driver)

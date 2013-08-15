@@ -55,6 +55,35 @@ class Filler(object):
 
     print '***END***'
 
+  #handles section tags that contain inline in the id
+  def _inline_section(self, page, inline_section):
+    print 'adding'
+    try:
+      add_button = inline_section.find_element_by_partial_link_text("Add")
+    except Exception, e:
+      add_button = inline_section.find_element_by_partial_link_text("recommendation")
+    
+    #clicks add button for an inline section
+    add_button.click()
+   
+    tr_tag = inline_section.find_element_by_class_name("editing")
+    new_forms = tr_tag.find_elements_by_tag_name('form')
+
+    for form in new_forms:
+      if 'form' in form.get_attribute('id'):
+        self._to_fieldsets(page, form)
+      else:
+        self._to_all_data_fields(page, form) #used as alternate way of uploading files
+
+    #saves info after filling in section
+    save_button = inline_section.find_element_by_partial_link_text("Save")
+    save_button.click()
+    
+    print '**********'
+    print 'saving'
+
+    wait_element = page.ip.is_element_visible(add_button)
+
   def _to_fieldsets(self, page, form): #parse form tag into fieldset tags
     fieldsets = form.find_elements_by_tag_name("fieldset") #finds fieldset tag children of given form tag
     for fieldset_tag in fieldsets:
@@ -182,7 +211,6 @@ class Filler(object):
       if 'primary' in data_field_id:
         data_field.click()
 
-##############################################################################################################################
   def create_random_username(self):
     self.fake_info.create_random_username()
 
@@ -301,32 +329,3 @@ class Filler(object):
     if data_field.is_displayed()==True:
       data_field.clear()
       data_field.send_keys(self.fake_info.lorem()[0:100]) #sends 100 character string of placeholder text
-
-  #handles section tags that contain inline in the id
-  def _inline_section(self, page, inline_section):
-    print 'adding'
-    try:
-      add_button = inline_section.find_element_by_partial_link_text("Add")
-    except Exception, e:
-      add_button = inline_section.find_element_by_partial_link_text("recommendation")
-    
-    #clicks add button for an inline section
-    add_button.click()
-   
-    tr_tag = inline_section.find_element_by_class_name("editing")
-    new_forms = tr_tag.find_elements_by_tag_name('form')
-
-    for form in new_forms:
-      if 'form' in form.get_attribute('id'):
-        self._to_fieldsets(page, form)
-      else:
-        self._to_all_data_fields(page, form) #used as alternate way of uploading files
-
-    #saves info after filling in section
-    save_button = inline_section.find_element_by_partial_link_text("Save")
-    save_button.click()
-    
-    print '**********'
-    print 'saving'
-
-    wait_element = page.ip.is_element_visible(add_button)
