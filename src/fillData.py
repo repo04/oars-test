@@ -151,19 +151,6 @@ class Filler(object):
           data_field.click()
     else:
       self._miscellaneous_radio_button(data_field)
-    # elif 'gender' in data_field_id:
-    #   if 'female' in data_field_id:
-    #     print 'clicking: ', data_field_id
-    #     data_field.click()
-    # elif 'score_type' in data_field_id:
-    #   if 'manual' in data_field_id:
-    #     data_field.click()
-    # elif 'marital_status' in data_field_id:
-    #   if 'single' in data_field_id:
-    #     data_field.click()
-    # elif 'mailing_address' in data_field_id:
-    #   if 'primary' in data_field_id:
-    #     data_field.click()
 
   def _yes_no_radio_button(self, fieldset_tag, data_field):
     data_field_id = data_field.get_attribute('id')
