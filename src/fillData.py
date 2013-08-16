@@ -93,11 +93,14 @@ class Filler(object):
           if data_field.is_displayed()==True or 'location' in data_field.get_attribute('id'): #checks to see if webelement is visible so as to prevent an exception from being thrown
             self._fill(data_field, fieldset_tag, page) #sends each webelement/data field to get sorted and filled with appropriate data
 
-  def _to_all_data_fields(self, page, form):
-    all_data_fields = form.find_elements_by_xpath(".//input") #used specifically an alternate way to upload files
+  def _to_all_data_fields(self, page, form): #used specifically as an alternate way to upload files
+    #form tags have no fieldset tags, so we go straight to searching for input tags instead
+    all_data_fields = form.find_elements_by_xpath(".//input")
     for data_field in all_data_fields:
       if data_field.get_attribute('type')=='file':
         try:
+          #div tag's that already have a file uploaded contain the word 'complete' in its class name
+          #we want to find the direct div parent/grandparent/etc. of the data field (webelement)
           tags = data_field.find_elements_by_xpath("ancestor::div[contains(@class, 'supload') and not(contains(@class, 'complete') and not(contains(@class, 'mask'))]")
           for div_tag in tags:
             if div_tag.is_displayed()==True:
