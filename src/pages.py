@@ -1,17 +1,35 @@
 #!/usr/bin/env python
-import time, sys
 from pageObject import Page
 from selenium import webdriver
+import time
+import sys
 
 class LandingPage(Page):
   def __init__(self, driver, name, url):
-    if driver.lower()=='chrome':
-      driver = webdriver.Chrome('./src/resources/chromedriver')
-    elif driver.lower()=='firefox':
-      driver = webdriver.Firefox()
-      driver.maximize_window() # does not work with chrome
-    
-    super(LandingPage, self).__init__(driver, name) #initialize parent class
+    #===========================================================================
+    # if driver.lower()=='chrome':
+    #   driver = webdriver.Chrome('C:/Python27/Scripts/chromedriver.exe')
+    # elif driver.lower()=='firefox':
+    #   driver = webdriver.Firefox()
+    #   driver.maximize_window() # does not work with chrome
+    #===========================================================================
+      
+    if driver.lower() == 'chrome':
+      desired_capabilities = webdriver.DesiredCapabilities.CHROME
+      desired_capabilities['platform'] = 'Windows 8'
+      desired_capabilities['version'] = ''
+      desired_capabilities['name'] = 'Chrome_Win8'
+    elif driver.lower() == 'firefox':
+      desired_capabilities = webdriver.DesiredCapabilities.FIREFOX
+      desired_capabilities['platform'] = 'Windows 8'
+      desired_capabilities['version'] = '23'
+      desired_capabilities['name'] = 'Firefox_Win8'
+      
+    self.driver = webdriver.Remote(
+            desired_capabilities=desired_capabilities,
+            command_executor="http://someshbansal:10c353c4-24e9-434c-811d-f3aba9e14213@ondemand.saucelabs.com:80/wd/hub"
+        )
+    super(LandingPage, self).__init__(self.driver, name)  # initialize parent class
     self.driver.get(url)
 
   def start_new_app(self, data):
@@ -51,7 +69,7 @@ class LandingPage(Page):
     wait_element = self.ip.is_element_clickable_by_xpath("//a[contains(@class, 'big button')]")
 
     print '**********'
-    print 'new user created: '+data.fake_info.email+'\n'
+    print 'new user created: ' + data.fake_info.email + '\n'
     print '\nWelcome to OARS!\n'
 
     try:
@@ -145,11 +163,11 @@ class PreviewPage(Page):
     except Exception, e:
       pass
 
-  def verify_application_submitted(self): #needs work
+  def verify_application_submitted(self):  # needs work
     print '**********'
     print 'verifying that application has been submitted'
     
-    try: #checks for 'Application Complete'. if check fails, then it checks again but for upper case string
+    try:  # checks for 'Application Complete'. if check fails, then it checks again but for upper case string
       wait_element = self.ip.is_text_present_by_xpath("//a[contains(@class, 'submitted')]", 'Application Submitted')
     except Exception, e:
       wait_element = self.ip.is_text_present_by_xpath("//a[contains(@class, 'submitted')]", 'Application Submitted'.upper())
@@ -182,17 +200,17 @@ class EmailPage(Page):
     
     email_from_program.click()
   
-    #wait_element = self.wait.until(EC.element_to_be_clickable((By.PARTIAL_LINK_TEXT, data.program_url)))
+    # wait_element = self.wait.until(EC.element_to_be_clickable((By.PARTIAL_LINK_TEXT, data.program_url)))
     wait_element = self.ip.is_element_clickable_by_partial_link_text(data.program_url)
-    #grabs all possible links in email. others may exist in the same email
-    #thread due to the test being run multiple times
-    verification_links = self.driver.find_elements_by_xpath("//a[contains(@href, '"+data.program_url+"')]")
+    # grabs all possible links in email. others may exist in the same email
+    # thread due to the test being run multiple times
+    verification_links = self.driver.find_elements_by_xpath("//a[contains(@href, '" + data.program_url + "')]")
     
     print '**********'
     print 'opening confirmation email and clicking verification link'    
 
     for link in verification_links:
-      if link.is_displayed()==True:
+      if link.is_displayed() == True:
         print '**********'
         print 'clicking link'
         link.click()
