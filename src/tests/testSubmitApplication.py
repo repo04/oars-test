@@ -7,8 +7,9 @@ def test(args):
   driver = args['driver']
   program_url = args['url']
   data = args['data']
+  os = args['os']
   
-  landing_page = LandingPage(driver, 'Login Page', program_url)
+  landing_page = LandingPage(driver, 'Login Page', program_url, os)
   landing_page.login(data)
 
   #test

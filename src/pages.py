@@ -5,7 +5,7 @@ import time
 import sys
 
 class LandingPage(Page):
-  def __init__(self, driver, name, url):
+  def __init__(self, driver, name, url, os):
     #===========================================================================
     # if driver.lower()=='chrome':
     #   driver = webdriver.Chrome('C:/Python27/Scripts/chromedriver.exe')
@@ -13,18 +13,24 @@ class LandingPage(Page):
     #   driver = webdriver.Firefox()
     #   driver.maximize_window() # does not work with chrome
     #===========================================================================
-      
+    
     if driver.lower() == 'chrome':
       desired_capabilities = webdriver.DesiredCapabilities.CHROME
-      desired_capabilities['platform'] = 'Windows 8'
-      desired_capabilities['version'] = ''
-      desired_capabilities['name'] = 'Chrome_Win8'
     elif driver.lower() == 'firefox':
       desired_capabilities = webdriver.DesiredCapabilities.FIREFOX
-      desired_capabilities['platform'] = 'Windows 8'
-      desired_capabilities['version'] = '23'
-      desired_capabilities['name'] = 'Firefox_Win8'
-      
+      #desired_capabilities['version'] = '22'
+    
+    if os == 'mac':
+      desired_capabilities['platform'] = 'MAC'
+      desired_capabilities['name'] = 'MAC' + '_' + driver.lower()
+    elif os == 'linux32' or os == 'linux64':
+      desired_capabilities['platform'] = 'LINUX'
+      desired_capabilities['name'] = 'LINUX' + '_' + driver.lower()
+    elif os == 'win':
+      desired_capabilities['platform'] = 'WINDOWS 8'
+      desired_capabilities['name'] = 'WINDOWS 8' + '_' + driver.lower()         
+
+
     self.driver = webdriver.Remote(
             desired_capabilities=desired_capabilities,
             command_executor="http://someshbansal:10c353c4-24e9-434c-811d-f3aba9e14213@ondemand.saucelabs.com:80/wd/hub"
