@@ -26,14 +26,15 @@ $ sudo easy_install faker
 | `test`             | -T         | yes       | None      | Specifies which test to execute  |
 | `driver`           | -D         | yes       | None      | Specifies which browser to run   |
 | `url`              | -U         | yes       | None      | The URL to OARS in test          | 
+| `os`               | -OS        | yes       | None      | Specifies which OS to run        |
 
 #### Example (Navigate to root directory)
 
 Tests the Personal Information page of an application
 
-    $ python testRunner.py -T 'testPersonalInfo' -U https://au-mir-oars-sb05-qa.2u.com/ -D 'Chrome'
+    $ python testRunner.py -T 'testPersonalInfo' -U https://au-mir-oars-sb05-qa.2u.com/ -D 'Chrome' -OS 'mac'
 
 #### Another example:
 Completes and submits an application using a randomly generated user
 
-	$ python testRunner.py -T 'testAllPagesWithNewUser' -U https://au-mir-oars-sb05-qa.2u.com/ -D 'Chrome'
+	$ python testRunner.py -T 'testAllPagesWithNewUser' -U https://au-mir-oars-sb05-qa.2u.com/ -D 'Chrome' -OS 'mac'
