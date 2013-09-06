@@ -14,6 +14,8 @@ class LandingPage(Page):
     #   driver.maximize_window() # does not work with chrome
     #===========================================================================
     
+    global desired_capabilities
+
     if driver.lower() == 'chrome':
       desired_capabilities = webdriver.DesiredCapabilities.CHROME
     elif driver.lower() == 'firefox':
