@@ -15,10 +15,11 @@ class LandingPage(Page):
     #===========================================================================
     
     global desired_capabilities
-
+    
     if driver.lower() == 'chrome':
       desired_capabilities = webdriver.DesiredCapabilities.CHROME
-    elif driver.lower() == 'firefox':
+    else:
+      #driver.lower() == 'firefox':
       desired_capabilities = webdriver.DesiredCapabilities.FIREFOX
       #desired_capabilities['version'] = '22'
     
@@ -28,7 +29,7 @@ class LandingPage(Page):
     elif os == 'linux32' or os == 'linux64':
       desired_capabilities['platform'] = 'LINUX'
       desired_capabilities['name'] = 'LINUX' + '_' + driver.lower()
-    elif os == 'win':
+    else:
       desired_capabilities['platform'] = 'WINDOWS 8'
       desired_capabilities['name'] = 'WINDOWS 8' + '_' + driver.lower()         
 
